@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <title id="t">Before and after</title>
+  <desc id="d">Before: a private project containing names, emails, an API key, client wording and internal links. After: a public demo page with invented data, a flow diagram, an example explorer and a safety report.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4d5b6e"/>
+    </marker>
+  </defs>
+  <rect x="16" y="16" width="340" height="298" rx="16" fill="#fdf0e4" stroke="#b35400" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="36" y="54" font-size="22" font-weight="700" fill="#1b2533">Before: private project</text>
+  <text x="36" y="82" font-size="15" fill="#4d5b6e">Stays in your private repository</text>
+  <text x="44" y="122" font-size="16" fill="#1b2533">Names and emails</text><rect x="200" y="110" width="120" height="14" rx="4" fill="#1b2533"/><text x="44" y="162" font-size="16" fill="#1b2533">API key</text><rect x="200" y="150" width="90" height="14" rx="4" fill="#1b2533"/><text x="44" y="202" font-size="16" fill="#1b2533">Client wording</text><rect x="200" y="190" width="130" height="14" rx="4" fill="#1b2533"/><text x="44" y="242" font-size="16" fill="#1b2533">Internal links</text><rect x="200" y="230" width="130" height="14" rx="4" fill="#1b2533"/>
+  <line x1="364" y1="165" x2="398" y2="165" stroke="#4d5b6e" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="404" y="16" width="340" height="298" rx="16" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="424" y="54" font-size="22" font-weight="700" fill="#1b2533">After: public demo</text>
+  <text x="424" y="82" font-size="15" fill="#4d5b6e">You publish it yourself</text>
+  <rect x="424" y="104" width="300" height="34" rx="8" fill="#ffffff" stroke="#1f5fbf"/>
+  <text x="438" y="127" font-size="16" fill="#1b2533">What it does, in plain words</text>
+  <rect x="424" y="148" width="300" height="34" rx="8" fill="#ffffff" stroke="#1f5fbf"/>
+  <text x="438" y="171" font-size="16" fill="#1b2533">Flow diagram</text>
+  <rect x="424" y="192" width="300" height="34" rx="8" fill="#ffffff" stroke="#1f5fbf"/>
+  <text x="438" y="215" font-size="16" fill="#1b2533">Try it: invented examples</text>
+  <rect x="424" y="236" width="300" height="34" rx="8" fill="#ffffff" stroke="#1f5fbf"/>
+  <text x="438" y="259" font-size="16" fill="#1b2533">How it was made safe</text>
+  <text x="424" y="296" font-size="14" fill="#4d5b6e">Every name and message is invented</text>
+</svg>

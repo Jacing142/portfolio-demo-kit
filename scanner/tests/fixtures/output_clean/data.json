@@ -1,0 +1,10 @@
+{
+  "title": "Loan note summariser",
+  "cases": [
+    {
+      "id": "a",
+      "input": "Customer Jo Example asks to pause payments for a month.",
+      "output": "Jo would like a one-month payment pause. No other changes requested."
+    }
+  ]
+}

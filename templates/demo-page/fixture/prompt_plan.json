@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {
+      "id": "late-parcel",
+      "system": "You triage customer emails for an online kitchenware shop. Reply in JSON with topic, urgency and a draft reply.",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Email from Jo Example:\nSubject: Where is my kettle?\nHi, I ordered a kettle (order EX-1001) nine days ago and the tracking has not moved since Monday. Could you check? Thanks, Jo\n\nOrder status: Shipped, carrier scan 6 days ago"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 348" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <title id="t">Example flow</title>
+  <desc id="d">A form answer is read, the model writes a draft, and a person approves it.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4d5b6e"/>
+    </marker>
+  </defs>
+  <g>
+    <rect x="32" y="16" width="296" height="64" rx="12" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
+    <text x="180" y="44" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Form answer arrives</text>
+    <text x="180" y="64" text-anchor="middle" font-size="12.5" fill="#4d5b6e">from a spreadsheet row</text>
+  </g>
+  <line x1="180" y1="84" x2="180" y2="120" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="192" y="106" font-size="12.5" fill="#4d5b6e">answer text</text>
+  <g>
+    <rect x="32" y="124" width="296" height="64" rx="12" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
+    <text x="180" y="152" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Model writes a draft</text>
+    <text x="180" y="172" text-anchor="middle" font-size="12.5" fill="#4d5b6e">one API call</text>
+  </g>
+  <line x1="180" y1="192" x2="180" y2="228" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="192" y="214" font-size="12.5" fill="#4d5b6e">draft</text>
+  <g>
+    <rect x="32" y="232" width="296" height="64" rx="12" fill="#fdf0e4" stroke="#b35400" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="180" y="260" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Person: approves it</text>
+    <text x="180" y="280" text-anchor="middle" font-size="12.5" fill="#4d5b6e">outside the code</text>
+  </g>
+  <rect x="32" y="318" width="18" height="14" rx="3" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="56" y="330" font-size="12.5" fill="#1b2533">Automated</text>
+  <rect x="150" y="318" width="18" height="14" rx="3" fill="#fdf0e4" stroke="#b35400" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="174" y="330" font-size="12.5" fill="#1b2533">A person does this</text>
+</svg>
