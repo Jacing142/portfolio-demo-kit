@@ -1,0 +1,5 @@
+Role,Description
+Glaze Line Operator,Runs one glaze line on a rotating shift. Works closely with two others and hands over to the next shift. Accuracy and calm matter more than speed.
+Shift Lead,Leads a team of six across two lines. Plans the shift and handles surprises. Sets the tone for the whole floor.
+Customer Planner,Turns trade orders into weekly production plans. Talks to sales and the floor every day. Needs to see problems before they arrive.
+Quality Inspector,Checks finished tiles against the spec and signs off batches. Works alone for long stretches and writes the defect log.

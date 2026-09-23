@@ -1,0 +1,42 @@
+{
+  "title": "Support email triage",
+  "tagline": "Sorts incoming customer emails by topic and urgency, then drafts a reply for a person to check.",
+  "what_it_does": [
+    "A small online shop gets a few hundred customer emails a week. This script reads each one, decides what it is about (a refund, a late parcel, a broken item or something else) and how urgent it is.",
+    "It then looks up the order and drafts a reply in the shop's tone. A support agent reads every draft before it is sent."
+  ],
+  "built_with": "Python, the Anthropic API, a CSV order table",
+  "diagram": "diagram.svg",
+  "diagram_caption": "Blue steps are automated. The dashed orange step is done by a person.",
+  "cases": [
+    {
+      "id": "late-parcel",
+      "label": "Late parcel, polite customer",
+      "input": {
+        "From": "Jo Example <jo@example.com>",
+        "Subject": "Where is my kettle?",
+        "Body": "Hi, I ordered a kettle (order EX-1001) nine days ago and the tracking has not moved since Monday. Could you check? Thanks, Jo",
+        "Order status": "Shipped, carrier scan 6 days ago"
+      },
+      "prompt_shown": "full"
+    },
+    {
+      "id": "refund-angry",
+      "label": "Refund request, frustrated customer",
+      "input": {
+        "From": "Sam Sample <sam@example.org>",
+        "Subject": "REFUND NOW",
+        "Body": "Third email. The lid snapped on day two. I want my money back, not another kettle.",
+        "Order status": "Delivered 12 days ago"
+      },
+      "prompt_shown": "summary",
+      "prompt_summary": "Classify the email into one of four topics and an urgency from 1 to 3, then draft a reply that follows the shop's refund policy and tone rules.",
+      "output_illustrative": "Topic: refund. Urgency: 3.\n\nHi Sam,\n\nI'm sorry the lid broke so soon, and that you've had to write three times. I've started a full refund to your original payment method; you'll see it within 5 working days. You don't need to send the kettle back.\n\nBest wishes,\nThe support team"
+    }
+  ],
+  "not_shown": [
+    "The shop's real name, customers, orders or email addresses",
+    "The real refund policy wording",
+    "How many emails the shop handles in production"
+  ]
+}

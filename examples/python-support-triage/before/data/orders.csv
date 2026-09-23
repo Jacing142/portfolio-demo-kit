@@ -1,0 +1,7 @@
+order_id,customer_email,item,status,shipped_on,value_gbp
+PK-204981,f.achterberg@mailbox.test,Brushed steel kettle 1.7L,delivered,2026-04-02,64.00
+PK-205117,noor.halvorsen@mailbox.test,Glass teapot with infuser,shipped,2026-04-09,28.50
+PK-205240,ruairi.bexley@mailbox.test,Gooseneck pour-over kettle,delivered,2026-04-05,172.00
+PK-205302,ottilie.m@mailbox.test,Cast iron tetsubin 0.8L,processing,,89.00
+PK-205388,d.ferreira-lund@mailbox.test,Travel kettle,delivered,2026-04-11,24.99
+PK-205401,kwame.ashdown@mailbox.test,Brushed steel kettle 1.7L,shipped,2026-04-10,64.00

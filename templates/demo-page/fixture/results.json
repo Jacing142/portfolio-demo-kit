@@ -1,0 +1,21 @@
+{
+  "requested_model": "claude-sonnet-5",
+  "cases": {
+    "late-parcel": {
+      "output": "{\n  \"topic\": \"late_parcel\",\n  \"urgency\": 2,\n  \"draft\": \"Hi Jo,\\n\\nThanks for getting in touch. Your kettle left us six days ago and the carrier hasn't updated the tracking since. I've opened a trace with them and will email you by tomorrow afternoon with news. If it hasn't moved by Friday, we'll send a replacement straight away.\\n\\nBest wishes,\\nThe support team\"\n}",
+      "model": "claude-sonnet-5",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "request_sha": "fixture"
+    }
+  },
+  "spent": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "calls": 0
+  },
+  "cost_usd": 0.0
+}
