@@ -1,0 +1,53 @@
+# portfolio-demo settings. This is the one place to change how the skill's scripts behave.
+
+[model]
+# The model used to run the project's own prompts on invented inputs (only when ANTHROPIC_API_KEY is set).
+# Use the model the project uses in production if you want the demo to match it.
+# Options include "claude-sonnet-5" (default) and "claude-fable-5-1" (most capable, costs more).
+demo_outputs = "claude-sonnet-5"
+# The model used for the optional rewording check in the leak scan.
+scan = "claude-sonnet-5"
+
+[limits]
+# Number of worked examples in the demo explorer. Each one is at most one API call.
+max_demo_cases = 6
+# Longest answer (in tokens) the model may write per example.
+max_output_tokens = 2000
+# Files bigger than this get a warning at preflight.
+max_file_mb = 25
+# Spreadsheets longer than this get a warning suggesting a sample.
+warn_rows = 200
+
+[scan]
+# Strings from the project shorter than this are not checked on their own (too common).
+min_string_length = 12
+# Whole lines of text shorter than this are not checked on their own.
+min_line_length = 30
+# Any run of this many words copied from the project counts as a leak.
+ngram_words = 6
+# Ask the model whether PROPRIETARY text was reworded into the demo. Needs ANTHROPIC_API_KEY.
+# Reported as warnings for a person to review; never blocks on its own.
+paraphrase_check = true
+# Email addresses on these domains are allowed in the demo (they are reserved for examples).
+allowed_email_domains = ["example.com", "example.org", "example.net"]
+# Links to these hosts are allowed in the demo.
+allowed_url_hosts = ["example.com", "example.org", "example.net", "www.w3.org", "localhost", "127.0.0.1"]
+# Secret patterns that are always checked. Remove a name to switch it off (not recommended).
+patterns = [
+  "anthropic_key", "openai_key", "aws_access_key", "github_token", "slack_token",
+  "google_api_key", "jwt", "private_key", "secret_assignment", "email",
+  "url", "private_ip", "long_id",
+]
+
+# Extra patterns of your own: name = "regular expression". Example: employee_id = "EMP-[0-9]{6}"
+[scan.extra_patterns]
+
+[pricing]
+# US dollars per million tokens, used only to estimate cost after running prompts.
+# Prices change: check https://www.anthropic.com/pricing and update these if needed.
+[pricing."claude-sonnet-5"]
+input = 2.00
+output = 10.00
+[pricing."claude-fable-5-1"]
+input = 10.00
+output = 50.00

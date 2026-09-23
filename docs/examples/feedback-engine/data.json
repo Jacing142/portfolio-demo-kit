@@ -1,0 +1,513 @@
+{
+  "meta": {
+    "title": "Psychometric Feedback Generator",
+    "subtitle": "Public demo. All questionnaire items, target answers and outputs are invented.",
+    "note": "Trait names and trait definitions are retained from the production pipeline, with the client's approval. Every questionnaire item, every target answer and every feedback block below was written for this demo and appears nowhere in the client data. Checked for leaks before publishing: see SCAN_REPORT.md.",
+    "productionScale": {
+      "items": 165,
+      "roles": 41,
+      "blocks": 6765,
+      "traits": 33,
+      "scales": 11
+    },
+    "demoScale": {
+      "items": 8,
+      "roles": 3,
+      "blocks": 24
+    },
+    "qaNote": "In production, quality control was a person reviewing samples of the generated feedback after each run, plus the self-review standard written into the generation prompt. There was no automated pass/fail step. The pass/fail verdicts on this page are an illustrative review, written for this demo.",
+    "footer": "Illustrative outputs written by Claude for this demo, following the production pipeline's writing rules.",
+    "reviewLabel": "Illustrative review. In production, review was done by a person."
+  },
+  "roles": [
+    {
+      "id": "pilot",
+      "name": "Pilot",
+      "plural": "Pilots",
+      "blurb": "Works in a high-stakes, time-pressured setting where safety, precision and disciplined decision-making come first. Needs risk-managed judgement, emotional control and strict procedural adherence even when conditions turn abnormal. Demands calm, rational performance, high execution accuracy, attention to detail and reliable follow-through on checklists. Must adapt tactics smoothly as conditions shift without compromising safety or standards, while communicating clearly and assertively and staying receptive to crew input."
+    },
+    {
+      "id": "account_manager",
+      "name": "Account Manager",
+      "plural": "Account Managers",
+      "blurb": "Owns long-term client relationships, balancing commercial outcomes against trust, responsiveness and consistency. Works through controlled influence: setting direction, managing expectations and pushing for decisions while staying accommodating enough that clients feel supported rather than pressured. Must stay emotionally steady through complaints, delays, escalations and churn risk. Depends on reliable follow-through, deliberate decisions and attention to detail, because shortcuts and broken promises damage credibility. Requires adaptive communication across different clients, stakeholders and seniority levels, and the independence to run accounts without close supervision."
+    },
+    {
+      "id": "software_engineer",
+      "name": "Software Engineer",
+      "plural": "Software Engineers",
+      "blurb": "Builds and maintains production software: designing systems, writing the code, testing it and keeping it working while requirements move underneath. Turns tangled problems into something another person can still read a year later, and reasons about abstractions and the relationships between them that are not obvious from the surface. Judgement sits between moving fast and moving carefully, weighing trade-offs, edge cases, failure modes and the debt a shortcut leaves behind, rather than either rushing or stalling. Stays composed and analytical through outages, contradictory requirements and high-pressure debugging, and absorbs changes of tooling and architectural direction without losing the thread. Explains technical reasoning well enough that teammates and stakeholders align with it, and holds a design position when the room disagrees."
+    }
+  ],
+  "traits": [
+    {
+      "id": "volatile",
+      "name": "Volatile",
+      "mainScale": "Excitable",
+      "definition": "Tendency to lose emotional control; easily angered or upset, reactive to frustration. Reflects emotional regulation capacity under stress."
+    },
+    {
+      "id": "mistrusting",
+      "name": "Mistrusting",
+      "mainScale": "Skeptical",
+      "definition": "Generalized mistrust of people and institutions; constant vigilance for mistreatment. Reflects wariness and defensiveness."
+    },
+    {
+      "id": "avoidant",
+      "name": "Avoidant",
+      "mainScale": "Cautious",
+      "definition": "Avoidance of new situations and people to prevent embarrassment; inhibited social approach. Reflects comfort with new contexts."
+    },
+    {
+      "id": "unsocial",
+      "name": "Unsocial",
+      "mainScale": "Reserved",
+      "definition": "Keeping others at distance; limited close relationships; detached and aloof. Reflects openness in relationships."
+    },
+    {
+      "id": "overconfidence",
+      "name": "Overconfidence",
+      "mainScale": "Bold",
+      "definition": "Unusual confidence in abilities; overestimation of competence. Reflects realistic self-assessment."
+    },
+    {
+      "id": "risky",
+      "name": "Risky",
+      "mainScale": "Mischievous",
+      "definition": "Prone to taking risks and testing limits; bending or breaking inconvenient rules. Reflects judgment and rule-adherence."
+    },
+    {
+      "id": "self_display",
+      "name": "Self-Display",
+      "mainScale": "Colorful",
+      "definition": "Expressive and dramatic; uses dramatics to attract attention. Reflects restraint and professionalism."
+    },
+    {
+      "id": "perfectionistic",
+      "name": "Perfectionistic",
+      "mainScale": "Diligent",
+      "definition": "Obsessed with quality details; reluctant to ship or delegate. Reflects ability to know when 'good enough' is sufficient."
+    }
+  ],
+  "items": [
+    {
+      "code": "DEMO-01",
+      "trait": "volatile",
+      "type": "reverse",
+      "statement": "I stay level-headed when a plan falls apart at the last minute."
+    },
+    {
+      "code": "DEMO-02",
+      "trait": "mistrusting",
+      "type": "direct",
+      "statement": "I assume most colleagues have an agenda they are not sharing."
+    },
+    {
+      "code": "DEMO-03",
+      "trait": "avoidant",
+      "type": "direct",
+      "statement": "I hold back from joining groups where I might look inexperienced.",
+      "extremeProfile": true
+    },
+    {
+      "code": "DEMO-04",
+      "trait": "unsocial",
+      "type": "reverse",
+      "statement": "I make a point of getting to know the people I work alongside."
+    },
+    {
+      "code": "DEMO-05",
+      "trait": "overconfidence",
+      "type": "direct",
+      "statement": "I am usually the most capable person in the room."
+    },
+    {
+      "code": "DEMO-06",
+      "trait": "risky",
+      "type": "direct",
+      "statement": "I will bypass a procedure when I am sure it is slowing things down."
+    },
+    {
+      "code": "DEMO-07",
+      "trait": "self_display",
+      "type": "reverse",
+      "statement": "I would rather my work get noticed than me."
+    },
+    {
+      "code": "DEMO-08",
+      "trait": "perfectionistic",
+      "type": "direct",
+      "statement": "I keep refining a piece of work long after others would call it done."
+    }
+  ],
+  "targets": {
+    "volatile": {
+      "pilot": "Strongly Disagree or Disagree",
+      "account_manager": "Disagree",
+      "software_engineer": "Disagree"
+    },
+    "mistrusting": {
+      "pilot": "Disagree or Agree",
+      "account_manager": "Strongly Disagree or Disagree",
+      "software_engineer": "Agree"
+    },
+    "avoidant": {
+      "pilot": "Strongly Disagree",
+      "account_manager": "Strongly Disagree",
+      "software_engineer": "Strongly Disagree"
+    },
+    "unsocial": {
+      "pilot": "Disagree",
+      "account_manager": "Strongly Disagree or Disagree",
+      "software_engineer": "Disagree or Agree"
+    },
+    "overconfidence": {
+      "pilot": "Disagree or Agree",
+      "account_manager": "Disagree",
+      "software_engineer": "Disagree or Agree"
+    },
+    "risky": {
+      "pilot": "Strongly Disagree or Disagree",
+      "account_manager": "Strongly Disagree",
+      "software_engineer": "Disagree or Agree"
+    },
+    "self_display": {
+      "pilot": "Strongly Disagree or Disagree",
+      "account_manager": "Disagree or Agree",
+      "software_engineer": "Disagree"
+    },
+    "perfectionistic": {
+      "pilot": "Agree or Strongly Agree",
+      "account_manager": "Strongly Agree",
+      "software_engineer": "Strongly Agree"
+    }
+  },
+  "flipMap": {
+    "Strongly Agree": "Strongly Disagree",
+    "Strongly Disagree": "Strongly Agree",
+    "Agree": "Disagree",
+    "Disagree": "Agree",
+    "Strongly Agree or Agree": "Strongly Disagree or Disagree",
+    "Agree or Strongly Agree": "Strongly Disagree or Disagree",
+    "Strongly Disagree or Disagree": "Strongly Agree or Agree",
+    "Disagree or Strongly Disagree": "Strongly Agree or Agree",
+    "Agree or Disagree": "Agree or Disagree",
+    "Disagree or Agree": "Disagree or Agree"
+  },
+  "writingRules": [
+    {
+      "n": 1,
+      "rule": "All substantive content comes from the role description, trait definition and target answer. No outside role knowledge."
+    },
+    {
+      "n": 2,
+      "rule": "Bold the trait name with <strong> on its first meaningful use, as a standalone noun or label."
+    },
+    {
+      "n": 3,
+      "rule": "Direct and punchy. No padding, no hedging, no commentary on the assessment itself."
+    },
+    {
+      "n": 4,
+      "rule": "Commas, colons, semicolons and full stops only. No em dashes or double hyphens."
+    },
+    {
+      "n": 5,
+      "rule": "Extreme target: describe one direction only. Middle target: explain why both extremes are problematic."
+    },
+    {
+      "n": 6,
+      "rule": "No instrument jargon."
+    },
+    {
+      "n": 7,
+      "rule": "No scoring language. Never frame a sentence around what the statement measures or predicts."
+    },
+    {
+      "n": 8,
+      "rule": "Exactly one concrete consequence, derived from the role description."
+    },
+    {
+      "n": 9,
+      "rule": "Treat each question in isolation. No cross-question references."
+    },
+    {
+      "n": 10,
+      "rule": "Vary sentence starters across blocks for the same role. Never open with 'crucial' or 'essential'."
+    },
+    {
+      "n": 11,
+      "rule": "Strict adherence to the [profession_only] template."
+    },
+    {
+      "n": 12,
+      "rule": "Reverse items open with the fixed reversal line, verbatim."
+    }
+  ],
+  "outputs": {
+    "volatile__pilot": {
+      "rawTarget": "Strongly Disagree or Disagree",
+      "finalTarget": "Strongly Agree or Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Volatile</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Pilot\"]\n<p>As this statement expresses a negative behavior, high <strong>Volatile</strong> corresponds to Strongly Disagree to reject it.</p> <p>Holding a steady emotional line when a plan collapses is a baseline requirement for Pilots, because safety depends on disciplined judgement continuing to operate after conditions turn abnormal. High <strong>Volatile</strong> means frustration takes over the flight deck exactly when checklists and procedure need your full attention. A reactive response to a late change degrades execution accuracy at the moment precision matters most.</p>\n<p>Aim for <strong>Strongly Agree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Meets the writing rules; single direction matches the extreme-anchored target."
+      }
+    },
+    "volatile__account_manager": {
+      "rawTarget": "Disagree",
+      "finalTarget": "Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Volatile</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>As this statement expresses a negative behavior, high <strong>Volatile</strong> corresponds to Strongly Disagree to reject it.</p> <p>Steadiness when a plan collapses matters for Account Managers, since escalations and churn risk arrive without warning and the client reads your reaction before they read your solution. High <strong>Volatile</strong> means frustration spills into the account conversation and the client starts managing your mood instead of the problem. Complete flatness carries its own cost, because a client who never sees urgency stops believing the issue is being worked. Renewal conversations get harder once composure has visibly cracked.</p>\n<p>Aim for <strong>Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Both directions covered as the middle target requires; one clear consequence."
+      }
+    },
+    "volatile__software_engineer": {
+      "rawTarget": "Disagree",
+      "finalTarget": "Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Volatile</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>As this statement expresses a negative behavior, high <strong>Volatile</strong> corresponds to Strongly Disagree to reject it.</p> <p>Essential for Software Engineers is staying analytical when a release plan breaks late, because outages and conflicting requirements are resolved by reasoning rather than reaction. High <strong>Volatile</strong> means the debugging session turns into a vent and the actual failure mode goes unexamined. Too little reactivity reads as indifference and teammates stop escalating to you at all. Either way the messy problems route around the person whose judgement was needed.</p>\n<p>Aim for <strong>Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "fail",
+        "reason": "Opens with 'Essential', which rule 10 bans as an opener."
+      }
+    },
+    "mistrusting__pilot": {
+      "rawTarget": "Disagree or Agree",
+      "finalTarget": "Disagree or Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Pilot\"]\n<p>Assuming hidden agendas in colleagues is a liability for Pilots because cockpit collaboration depends on taking crew input at face value under time pressure. High <strong>Mistrusting</strong> means you interrogate a first officer's callout instead of acting on it. Hesitation born of suspicion costs seconds that an abnormal condition does not give back.</p>\n<p>Aim for <strong>Disagree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "fail",
+        "reason": "Target is a middle band but only the high direction is explained; rule 5 requires both."
+      }
+    },
+    "mistrusting__account_manager": {
+      "rawTarget": "Strongly Disagree or Disagree",
+      "finalTarget": "Strongly Disagree or Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>Reading hidden motives into colleagues undermines Account Managers, because the role runs on trust extended first and reciprocated later, across clients and internal teams alike. High <strong>Mistrusting</strong> means you treat a delayed reply as evidence of bad faith and start defending the account instead of managing it. Suspicion leaks into client tone, and rapport built over months erodes in a single exchange.</p>\n<p>Aim for <strong>Strongly Disagree or Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Extreme-anchored target, single direction, consequence tied to the role description."
+      }
+    },
+    "mistrusting__software_engineer": {
+      "rawTarget": "Agree",
+      "finalTarget": "Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>A measured wariness about unstated motives has real value for Software Engineers, since requirements arrive with unspoken constraints and design decisions carry interests nobody wrote down. Moderate <strong>Mistrusting</strong> means you probe why a requirement exists before building to it rather than accepting the brief as complete. Pushed further it becomes defensiveness in review, and the team stops offering the input that would have caught the edge case.</p>\n<p>Aim for <strong>Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Middle target handled in both directions; no scoring language."
+      }
+    },
+    "avoidant__pilot": {
+      "rawTarget": "Strongly Disagree",
+      "finalTarget": "Strongly Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Pilot\"]\n<p>Hanging back from groups where you might look inexperienced is disqualifying for Pilots because crew coordination requires you to speak into the flight deck regardless of how the question lands. High <strong>Avoidant</strong> means a doubt goes unvoiced because raising it would expose a gap in your knowledge. An unspoken concern at altitude has no later opportunity to surface.</p>\n<p>Aim for <strong>Strongly Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Extreme target, one direction only, as rule 5 requires."
+      }
+    },
+    "avoidant__account_manager": {
+      "rawTarget": "Strongly Disagree",
+      "finalTarget": "Strongly Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>Withdrawing from rooms where you might look underqualified is a direct threat to Account Managers, because the role requires initiating contact across seniority levels and unfamiliar stakeholder groups as a matter of routine. High <strong>Avoidant</strong> means the introduction that would have opened the renewal never gets made. Accounts quietly narrow to the two contacts you already find comfortable.</p>\n<p>Aim for <strong>Strongly Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Clean template, one concrete consequence, no banned openers."
+      }
+    },
+    "avoidant__software_engineer": {
+      "rawTarget": "Strongly Disagree",
+      "finalTarget": "Strongly Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>Staying out of discussions where your inexperience might show works against Software Engineers, since design direction is set in exactly the forums where you know least. High <strong>Avoidant</strong> means the trade-off you would have questioned gets decided without you. The technical debt lands in code you then have to maintain.</p>\n<p>Aim for <strong>Strongly Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Consequence derives from the role description; single direction matches the extreme target."
+      }
+    },
+    "unsocial__pilot": {
+      "rawTarget": "Disagree",
+      "finalTarget": "Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Unsocial</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Pilot\"]\n<p>As this statement expresses a negative behavior, high <strong>Unsocial</strong> corresponds to Strongly Disagree to reject it.</p> <p>Deliberately getting to know the crew you fly with supports Pilots, because receptiveness to input depends on a working relationship established before the abnormal condition arrives. High <strong>Unsocial</strong> means you stay detached and a first officer weighs whether to challenge you. Excessive familiarity blurs the command gradient just as badly. Either failure shows up as a callout that comes a moment too late.</p>\n<p>Aim for <strong>Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Middle target, both directions, single closing consequence."
+      }
+    },
+    "unsocial__account_manager": {
+      "rawTarget": "Strongly Disagree or Disagree",
+      "finalTarget": "Strongly Agree or Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Unsocial</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>As this statement expresses a negative behavior, high <strong>Unsocial</strong> corresponds to Strongly Disagree to reject it.</p> <p>Actively building familiarity with the people around you is the working method of Account Managers, since reading client signals and adjusting tone across contexts depends on knowing the person rather than the account record. High <strong>Unsocial</strong> means you keep contacts transactional and miss the concern that was never stated directly. Churn arrives as a surprise because nobody felt close enough to warn you.</p>\n<p>Aim for <strong>Strongly Agree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Reversal line verbatim, trait bolded correctly, one consequence."
+      }
+    },
+    "unsocial__software_engineer": {
+      "rawTarget": "Disagree or Agree",
+      "finalTarget": "Disagree or Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Unsocial</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>As this statement expresses a negative behavior, high <strong>Unsocial</strong> corresponds to Strongly Disagree to reject it.</p> <p>Knowing your teammates as people helps Software Engineers, because defending a design decision lands differently when there is trust behind it. High <strong>Unsocial</strong> means you optimise for solo focus and your reasoning never reaches the people who need to act on it. Constant socialising costs the deep work the role is built on. The balance decides whether your technical opinions travel.</p>\n<p>Aim for <strong>Disagree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Middle target, both directions, one closing consequence."
+      }
+    },
+    "overconfidence__pilot": {
+      "rawTarget": "Disagree or Agree",
+      "finalTarget": "Disagree or Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Pilot\"]\n<p>Rating yourself as the most capable person present cuts both ways for Pilots, because command requires assertive decision-making while safety requires you to keep hearing the crew. High <strong>Overconfidence</strong> means you discount a challenge from the right seat because you are certain of your own read. Underrating yourself is equally costly, leaving the flight deck without a clear decision-maker when one is required. Either extreme breaks the cockpit collaboration the role depends on.</p>\n<p>Aim for <strong>Disagree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Both extremes addressed, as the middle band requires."
+      }
+    },
+    "overconfidence__account_manager": {
+      "rawTarget": "Disagree",
+      "finalTarget": "Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>Believing you outclass the room is a liability for Account Managers, because influence here works through accommodation as much as assertion. An <strong>Overconfidence</strong>-driven approach means you push past a client's stated hesitation instead of working with it. Too little confidence is also a problem, leaving you unable to set direction or hold a price. The account stalls when the client stops believing you will tell them something they do not want to hear.</p>\n<p>Aim for <strong>Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "fail",
+        "reason": "Trait name embedded mid-phrase as 'Overconfidence-driven', which rule 2 prohibits."
+      }
+    },
+    "overconfidence__software_engineer": {
+      "rawTarget": "Disagree or Agree",
+      "finalTarget": "Disagree or Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>Certainty that you are the strongest engineer present has a narrow useful range, since defending a design decision requires conviction and reviewing one requires doubt. High <strong>Overconfidence</strong> means you ship past an edge case a teammate flagged because your read of the system felt complete. Too little and you defer on architecture calls that were yours to make. The system inherits whichever failure you brought to it.</p>\n<p>Aim for <strong>Disagree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Middle band, both directions, no jargon or scoring language."
+      }
+    },
+    "risky__pilot": {
+      "rawTarget": "Strongly Disagree or Disagree",
+      "finalTarget": "Strongly Disagree or Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Pilot\"]\n<p>Bypassing a procedure you judge to be slowing you down is incompatible with Pilots, because adherence to protocol is what holds when your own judgement is degraded by pressure or fatigue. High <strong>Risky</strong> means a checklist item gets skipped on the basis of a shortcut that felt safe at the time. The margin that procedure was protecting is gone before you find out you needed it.</p>\n<p>Aim for <strong>Strongly Disagree or Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Extreme-anchored target, single direction, consequence follows from the role."
+      }
+    },
+    "risky__account_manager": {
+      "rawTarget": "Strongly Disagree",
+      "finalTarget": "Strongly Disagree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>Cutting around process because it feels slow is a direct risk for Account Managers, since contracts and approval steps are what make a promise to a client enforceable. High <strong>Risky</strong> means you commit to a delivery date the process had not cleared yet. The credibility lost when that promise fails is not recovered inside the renewal cycle.</p>\n<p>Aim for <strong>Strongly Disagree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Extreme target handled in one direction; template intact."
+      }
+    },
+    "risky__software_engineer": {
+      "rawTarget": "Disagree or Agree",
+      "finalTarget": "Disagree or Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>Willingness to route around a process you judge wasteful has real limits for Software Engineers, because shipping under constraint sometimes means questioning a step and sometimes means respecting it. High <strong>Risky</strong> means the review gets skipped on a change you were confident about. Rigid adherence has its own price, stalling delivery on ceremony that no longer serves the work. Where you land decides whether the trade-off was reasoned or merely convenient.</p>\n<p>Aim for <strong>Disagree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Both directions covered for the middle band; no banned openers."
+      }
+    },
+    "self_display__pilot": {
+      "rawTarget": "Strongly Disagree or Disagree",
+      "finalTarget": "Strongly Agree or Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Self-Display</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Pilot\"]\n<p>As this statement expresses a negative behavior, high <strong>Self-Display</strong> corresponds to Strongly Disagree to reject it.</p> <p>Preferring the work to draw attention rather than yourself fits Pilots, because the role is executed through standard calls and procedure rather than personal style. High <strong>Self-Display</strong> means communication becomes performance and clarity suffers at the point it is needed. A dramatic delivery of a routine callout costs the crew a beat of comprehension.</p>\n<p>Aim for <strong>Strongly Agree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Reversal line verbatim; single direction matches the extreme-anchored target."
+      }
+    },
+    "self_display__account_manager": {
+      "rawTarget": "Disagree or Agree",
+      "finalTarget": "Disagree or Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Self-Display</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>As this statement expresses a negative behavior, high <strong>Self-Display</strong> corresponds to Strongly Disagree to reject it.</p> <p>Letting the work carry the visibility sits in tension for Account Managers, because presence is part of how a relationship holds while theatre undermines it. High <strong>Self-Display</strong> means expressiveness tips into dramatics. Low <strong>Self-Display</strong> means you hold back where the relationship needed you visible.</p>\n<p>Aim for <strong>Disagree or Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "fail",
+        "reason": "States both directions but gives no concrete role consequence; rule 8 requires one."
+      }
+    },
+    "self_display__software_engineer": {
+      "rawTarget": "Disagree",
+      "finalTarget": "Agree",
+      "flipped": true,
+      "reversalLine": "As this statement expresses a negative behavior, high <strong>Self-Display</strong> corresponds to Strongly Disagree to reject it.",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>As this statement expresses a negative behavior, high <strong>Self-Display</strong> corresponds to Strongly Disagree to reject it.</p> <p>Wanting the output noticed ahead of yourself suits Software Engineers, because technical credibility is established by what the code does rather than how it is announced. High <strong>Self-Display</strong> means design reviews turn into a stage and the trade-offs go undiscussed. Withdrawing entirely is also costly, since a decision you never argued for gets made by someone with less context. The team ends up aligned on the loudest position rather than the soundest.</p>\n<p>Aim for <strong>Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Middle target, both directions, one closing consequence."
+      }
+    },
+    "perfectionistic__pilot": {
+      "rawTarget": "Agree or Strongly Agree",
+      "finalTarget": "Agree or Strongly Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Pilot\"]\n<p>Continuing to refine work past the point others would stop is warranted for Pilots, because execution accuracy and checklist discipline do not tolerate a good enough threshold. High <strong>Perfectionistic</strong> means every item gets run and no step is waived because conditions felt routine. The detail you would have skipped is the one that holds when the situation turns abnormal.</p>\n<p>Aim for <strong>Agree or Strongly Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Direction matches the target; consequence drawn from the role description."
+      }
+    },
+    "perfectionistic__account_manager": {
+      "rawTarget": "Strongly Agree",
+      "finalTarget": "Strongly Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Account Manager\"]\n<p>Refining past the point others would call it finished serves Account Managers, because reliable follow-through and accuracy are what make a promise to a client credible. High <strong>Perfectionistic</strong> means the proposal goes out checked, the numbers hold, and the commitment survives contact with procurement. An error caught before sending is one the client never uses to question the account.</p>\n<p>Aim for <strong>Strongly Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Extreme target, single direction, clean template."
+      }
+    },
+    "perfectionistic__software_engineer": {
+      "rawTarget": "Strongly Agree",
+      "finalTarget": "Strongly Agree",
+      "flipped": false,
+      "reversalLine": "",
+      "block": "[profession_only position=\"Software Engineer\"]\n<p>Carrying work past the point others would ship is an asset for Software Engineers, because maintainability and edge case handling are decided in the pass most people skip. High <strong>Perfectionistic</strong> means the failure mode gets traced before the change lands rather than during the outage. Every hour spent there is repaid the first time the system is under load.</p>\n<p>Aim for <strong>Strongly Agree</strong>.</p>\n[/profession_only]",
+      "qa": {
+        "status": "pass",
+        "reason": "Extreme target, one direction, one concrete consequence."
+      }
+    }
+  }
+}

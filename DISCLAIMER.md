@@ -8,13 +8,12 @@ portfolio-demo-kit helps you make a public demo of private work. Please read thi
 2. **You need permission.** Use it only on work you are allowed to share publicly, and allowed to
    send to an AI provider. Your contract with your client may forbid either. If you are not sure,
    ask your client first.
-3. **Your files are sent to an AI provider.** When the workflows run, the contents of the folder
-   you choose are sent to Anthropic's API using your own API key, under your own agreement with
-   Anthropic. Nothing is sent to the authors of this tool.
-4. **Keep your copy private.** Create your copy with "Use this template" and choose **Private**.
-   Never fork this repository: forks of public repositories are public. The workflows refuse to
-   run in a public repository, but files you upload are visible as soon as they are committed.
-5. **Costs are yours.** API usage is billed to your Anthropic account. Cost figures shown by the
-   tool are estimates.
+3. **Your files are processed by an AI provider.** The skill runs inside Claude Code, which sends
+   what Claude reads to Anthropic under your own agreement with Anthropic. If you set
+   `ANTHROPIC_API_KEY`, your project's prompts, filled in with invented data, are also sent to the
+   Anthropic API. Nothing is sent to the authors of this tool.
+4. **Your project is never changed.** The skill works on a temporary copy and writes the demo to a
+   separate folder. Delete that temporary copy when you are done; the skill reminds you.
+5. **Costs are yours.** Usage is billed to your own Claude plan or Anthropic account.
 6. **No warranty.** The software is provided under the MIT License, "as is", without warranty of
    any kind. It is not legal advice.

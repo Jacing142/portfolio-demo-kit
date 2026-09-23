@@ -1,0 +1,23 @@
+{
+  "name": "portfolio-demo-kit",
+  "description": "Turn private client work into a safe public portfolio demo.",
+  "owner": {
+    "name": "Jacing142",
+    "url": "https://github.com/Jacing142"
+  },
+  "plugins": [
+    {
+      "name": "portfolio-demo",
+      "source": "./plugins/portfolio-demo",
+      "description": "Turns a private project into a safe public demo: finds what is sensitive, asks you what to keep, fake or remove, builds a demo page from invented data and scans it for leaks.",
+      "category": "productivity",
+      "keywords": [
+        "portfolio",
+        "demo",
+        "privacy",
+        "sanitise",
+        "case-study"
+      ]
+    }
+  ]
+}

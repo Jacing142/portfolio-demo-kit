@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-demo",
+  "description": "Turn a private project into a safe public portfolio demo: inventory, classify, ask the owner, invent data, build a demo page and diagram, scan for leaks, write a case study and sanitisation report.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jacing142",
+    "url": "https://github.com/Jacing142"
+  },
+  "homepage": "https://jacing142.github.io/portfolio-demo-kit/",
+  "repository": "https://github.com/Jacing142/portfolio-demo-kit",
+  "license": "MIT",
+  "keywords": ["portfolio", "demo", "privacy", "sanitise", "case-study"]
+}

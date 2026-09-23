@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" role="img" aria-labelledby="t" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
-  <title id="t">Screenshot placeholder for step 6: Download demo.zip from the comment</title>
-  <rect x="4" y="4" width="712" height="232" rx="16" fill="#f6f8fb" stroke="#d6dde8" stroke-width="2" stroke-dasharray="8 6"/>
-  <circle cx="72" cy="120" r="34" fill="#1f5fbf"/>
-  <text x="72" y="131" text-anchor="middle" font-size="32" font-weight="700" fill="#ffffff">6</text>
-  <text x="130" y="112" font-size="24" font-weight="600" fill="#1b2533">Download demo.zip from the comment</text>
-  <text x="130" y="146" font-size="17" fill="#4d5b6e">Screenshot to come. Replace docs/screenshots/step-6.svg with a real image.</text>
-</svg>

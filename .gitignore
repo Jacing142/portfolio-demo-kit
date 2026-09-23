@@ -1,6 +1,3 @@
-# Private working files. Never commit these.
-work/
-output/
 __pycache__/
 *.pyc
 .DS_Store
