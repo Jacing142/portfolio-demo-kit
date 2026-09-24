@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self';">
+<meta name="description" content="Turn private client work into a safe public portfolio demo. You decide what stays, what gets faked and what goes.">
+<title>portfolio-demo-kit: show work you can't share</title>
+<style>
+  :root {
+    --blue: #1f5fbf;
+    --blue-soft: #e8f0fc;
+    --orange: #b35400;
+    --orange-soft: #fdf0e4;
+    --ink: #1b2533;
+    --muted: #4d5b6e;
+    --line: #d6dde8;
+    --bg: #ffffff;
+    --panel: #f6f8fb;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  a { color: var(--blue); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+  img { max-width: 100%; height: auto; display: block; }
+  .top { border-bottom: 4px solid var(--blue); }
+  .top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
+  .brand { font-weight: 700; letter-spacing: -.01em; }
+  .top nav { display: flex; gap: 16px; font-size: .95rem; flex-wrap: wrap; justify-content: flex-end; }
+  .hero { padding: 40px 0 8px; }
+  .hero h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 14px; letter-spacing: -.02em; }
+  .hero p.lead { font-size: 1.12rem; color: var(--muted); margin: 0 0 20px; max-width: 42em; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .btn { display: inline-block; padding: 11px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 2px solid var(--blue); }
+  .btn.primary { background: var(--blue); color: #fff; }
+  .btn.secondary { background: #fff; color: var(--blue); }
+  section { padding: 28px 0; }
+  h2 { font-size: 1.45rem; margin: 0 0 14px; padding-left: 12px; border-left: 5px solid var(--orange); line-height: 1.25; }
+  h3 { font-size: 1.1rem; margin: 0 0 6px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .figure { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .how { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
+  .how > *, .cards > * { min-width: 0; }
+  .how .figure img { width: 100%; max-width: 360px; margin: 0 auto; }
+  ol.steps { margin: 0; padding-left: 22px; }
+  ol.steps li { margin-bottom: 10px; }
+  .cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  .card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+  .card img { border-bottom: 1px solid var(--line); aspect-ratio: 1280 / 860; object-fit: cover; object-position: top; width: 100%; }
+  .card .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .tag { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 2px solid; width: fit-content; }
+  .tag.real { color: var(--blue); border-color: var(--blue); background: var(--blue-soft); }
+  .tag.invented { color: var(--orange); border-color: var(--orange); background: var(--orange-soft); border-style: dashed; }
+  .card .links { margin-top: auto; display: flex; gap: 14px; flex-wrap: wrap; font-weight: 600; font-size: .95rem; }
+  pre { background: #10233f; color: #eef3fb; border-radius: 10px; padding: 14px; overflow-x: auto; margin: 8px 0 14px;
+    font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+  .try { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 16px; }
+  .safety { background: var(--orange-soft); border: 2px solid var(--orange); border-radius: 14px; padding: 16px 18px; }
+  .safety ul { margin: 0; padding-left: 20px; }
+  .safety li { margin-bottom: 8px; }
+  footer { border-top: 1px solid var(--line); margin-top: 24px; padding: 18px 0 40px; font-size: .9rem; color: var(--muted); }
+  @media (min-width: 720px) {
+    .hero h1 { font-size: 2.6rem; }
+    .how { grid-template-columns: 380px minmax(0, 1fr); }
+    .cards { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="wrap">
+    <span class="brand">portfolio-demo-kit</span>
+    <nav aria-label="Sections">
+      <a href="#examples">Examples</a>
+      <a href="#try">Try it</a>
+      <a href="#safety">Safety</a>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Your best work is under NDA, so you can't show it.</h1>
+    <p class="lead">portfolio-demo-kit turns a private project into a safe public demo you can put in your portfolio: a page people can click through, a diagram of how it works, and a short case study. You decide what stays, what gets replaced with invented data, and what is left out.</p>
+    <div class="cta">
+      <a class="btn primary" href="#examples">See real examples</a>
+      <a class="btn secondary" href="#try">Try it yourself</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="ba">
+    <h2 id="ba">Before and after</h2>
+    <div class="figure">
+      <img src="before-after.svg" width="760" height="330" alt="Before: a private project with names, emails, an API key, client wording and internal links. After: a public demo page with a plain-words summary, a flow diagram, invented examples to try and a note on how it was made safe.">
+    </div>
+  </section>
+
+  <section aria-labelledby="how">
+    <h2 id="how">How it works</h2>
+    <div class="how">
+      <div class="figure">
+        <img src="how-it-works.svg" width="360" height="672" alt="Six steps: point it at your project; it lists what is sensitive; you decide; it builds the demo; a leak scan fixes and rescans; you publish.">
+      </div>
+      <div>
+        <ol class="steps">
+          <li><strong>Point it at your project.</strong> It reads a copy. Your original files are never changed.</li>
+          <li><strong>It lists what is sensitive</strong> in one table: people's details, your client's know-how, keys and private links. Each row has a suggestion: keep it, replace it with invented data, or leave it out.</li>
+          <li><strong>You decide.</strong> You answer a few questions the code can't: what happens outside the code, what to show off, and what you don't want said in public.</li>
+          <li><strong>It builds the demo</strong> from invented data, running your project's own logic on it where it can. Every result is labelled: a real run, or an example written by Claude.</li>
+          <li><strong>A leak scan</strong> checks every word of the demo against your project, including ten fake "canary" strings planted to catch copied rows. If it finds anything, it fixes it and checks again.</li>
+          <li><strong>You publish it</strong> yourself, after reading it, in a new public repository. Nothing is ever published for you.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="examples" aria-labelledby="ex">
+    <h2 id="ex">Examples you can click through</h2>
+    <p class="muted">Each one is a live demo page, plus a note on exactly how it was made safe.</p>
+    <div class="cards">
+      <article class="card">
+        <img src="img/feedback-engine.jpg" width="1280" height="860" alt="The feedback generator demo page, showing its pipeline diagram">
+        <div class="body">
+          <span class="tag real">Real client project</span>
+          <h3>Psychometric feedback generator</h3>
+          <p>A Google Sheets script that writes role-specific feedback for every question in a personality questionnaire, for every job role. The questions, targets and feedback shown are all invented.</p>
+          <div class="links">
+            <a href="examples/feedback-engine/index.html">Open the demo</a>
+            <a href="examples/feedback-engine/SCAN_REPORT.md">How it was made safe</a>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="img/apps-script-feedback.jpg" width="1280" height="860" alt="The workstyle feedback writer demo page">
+        <div class="body">
+          <span class="tag invented">Invented project</span>
+          <h3>Workstyle feedback writer</h3>
+          <p>Turns a short workstyle questionnaire into a personal feedback note. The project's own scoring code ran on invented answers.</p>
+          <div class="links">
+            <a href="examples/apps-script-feedback/index.html">Open the demo</a>
+            <a href="examples/apps-script-feedback/SANITISATION.md">How it was made safe</a>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="img/python-support-triage.jpg" width="1280" height="860" alt="The support email triage demo page">
+        <div class="body">
+          <span class="tag invented">Invented project</span>
+          <h3>Support email triage</h3>
+          <p>Sorts customer emails by topic and urgency, looks up the order and drafts a reply for a person to check. Includes a safety case and an email in French.</p>
+          <div class="links">
+            <a href="examples/python-support-triage/index.html">Open the demo</a>
+            <a href="examples/python-support-triage/SANITISATION.md">How it was made safe</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="try" aria-labelledby="tryh">
+    <h2 id="tryh">Try it (for technical readers)</h2>
+    <div class="try">
+      <p>It is a skill for <strong>Claude Code</strong>. Install it from inside Claude Code:</p>
+      <pre><code>/plugin marketplace add Jacing142/portfolio-demo-kit
+/plugin install portfolio-demo@portfolio-demo-kit</code></pre>
+      <p>Or copy the skill folder by hand:</p>
+      <pre><code>git clone https://github.com/Jacing142/portfolio-demo-kit
+cp -r portfolio-demo-kit/plugins/portfolio-demo/skills/portfolio-demo ~/.claude/skills/</code></pre>
+      <p>Then, in Claude Code, from the cloned folder, ask:</p>
+      <pre><code>Run the portfolio-demo skill on examples/apps-script-feedback/before</code></pre>
+      <p class="muted">No API key is needed: without one, example outputs are written by Claude and labelled "Illustrative". If <code>ANTHROPIC_API_KEY</code> is set, the project's own prompts are run for real and labelled with the model that answered. Python 3.11 or newer is the only other requirement.</p>
+    </div>
+  </section>
+
+  <section id="safety" aria-labelledby="safe">
+    <h2 id="safe">Safety</h2>
+    <div class="safety">
+      <ul>
+        <li><strong>Use it only on work you are allowed to share</strong>, and allowed to send to an AI provider. If you are not sure, ask your client first.</li>
+        <li><strong>It reduces risk. It does not guarantee it.</strong> Read every word of the demo before you publish it.</li>
+        <li>It never changes your project, never publishes anything, and never keeps keys or passwords, whatever you choose.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    Open source under the MIT licence. <a href="https://github.com/Jacing142/portfolio-demo-kit">Source code on GitHub</a>.
+    This page makes no requests to other websites.
+  </div>
+</footer>
+</body>
+</html>

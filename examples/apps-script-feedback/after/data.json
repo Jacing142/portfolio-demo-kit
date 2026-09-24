@@ -1,0 +1,108 @@
+{
+  "title": "Workstyle feedback writer",
+  "tagline": "Turns a short workstyle questionnaire into a warm, personal feedback note for each member of staff.",
+  "what_it_does": [
+    "Staff answer eight questions about how they work. Each night a Google Apps Script scores four traits (Anchor, Kindle, Lattice and Horizon), compares each score with what the person's role needs, and describes the gap in plain words: on target, a little above or below, or well above or below.",
+    "It then sends those results, the role description and the person's own comment to Claude, with eight writing rules: start with a strength, mention at most two gaps as habits to try, never quote a number, and end with a suggestion for the next team huddle. A member of the people team checks each note before it goes out."
+  ],
+  "built_with": "Google Apps Script, Google Sheets, the Anthropic API",
+  "diagram_caption": "Blue steps are automated. The dashed orange steps are done by a person.",
+  "cases": [
+    {
+      "id": "lead-mixed",
+      "label": "Team lead: steady, but two big gaps",
+      "input": {
+        "Person": "Rowan (invented)",
+        "Role": "Team Lead",
+        "Answers to the 8 questions": "5, 3, 4, 2, 4, 3, 3, 3",
+        "Their comment": "I spend all day firefighting and never get to plan",
+        "Trait results worked out by the script": "Anchor 4.5, Kindle 3, Lattice 3.5, Horizon 2.5"
+      },
+      "prompt": "SYSTEM\nWrite a brief note for one member of staff about how they work.\nBase it on their questionnaire results and the role description provided.\nRules:\n1. Start with the strongest trait relative to the role target, never with a weakness.\n2. Mention at most two gaps, and frame each as a habit to try this month, not a flaw.\n3. Never say \"score\", \"target\" or any number. Translate them into plain behaviour.\n4. Use the person's first name once, in the first sentence.\n5. Refer to their own comment if they left one, in a way that shows it was read.\n6. Keep it under 120 words, warm and direct, British spelling, no bullet points.\n7. End with one concrete suggestion for their next team huddle.\n8. If every trait is on target, say so briefly and suggest a stretch goal instead.\n\nUSER\nRole: Team Lead\nRole persona: Leads a small team through a changing weekly plan. Sets priorities each morning, unblocks people, and is the first to hear when something slips.\nFirst name: Rowan\nTrait results (1-5 scale):\nAnchor: 4.5 (target 4, a little above the role target)\nKindle: 3 (target 4.5, well below the role target)\nLattice: 3.5 (target 3, a little above the role target)\nHorizon: 2.5 (target 4, well below the role target)\nTheir own comment: I spend all day firefighting and never get to plan",
+      "prompt_note": "This is the prompt the project's own code assembled from the invented answers above. The writing rules are the project's own; the two opening lines were changed so they do not name the company or the questionnaire.",
+      "output": "Rowan, your steadiness is a real strength: when the weekly plan shifts, your team can lean on you to stay calm. You also bring more structure than the role usually asks for, so loose ends rarely pile up. You said you spend the day firefighting and never get to plan, and that is worth working on this month. Try keeping a short slot each Friday to look at the week ahead and name the clash most likely to land. Alongside that, when a problem comes in, ask a teammate to own the fix rather than picking it up yourself, so the energy spreads. At your next team huddle, ask everyone to share the thing they can see coming next week.",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "coordinator-on-target",
+      "label": "Coordinator: every trait on target",
+      "input": {
+        "Person": "Sam (invented)",
+        "Role": "Coordinator",
+        "Answers to the 8 questions": "4, 3, 5, 3, 3, 3, 4, 3",
+        "Their comment": "(none)",
+        "Trait results worked out by the script": "Anchor 3.5, Kindle 3, Lattice 4.5, Horizon 3"
+      },
+      "prompt": "SYSTEM\nWrite a brief note for one member of staff about how they work.\nBase it on their questionnaire results and the role description provided.\nRules:\n1. Start with the strongest trait relative to the role target, never with a weakness.\n2. Mention at most two gaps, and frame each as a habit to try this month, not a flaw.\n3. Never say \"score\", \"target\" or any number. Translate them into plain behaviour.\n4. Use the person's first name once, in the first sentence.\n5. Refer to their own comment if they left one, in a way that shows it was read.\n6. Keep it under 120 words, warm and direct, British spelling, no bullet points.\n7. End with one concrete suggestion for their next team huddle.\n8. If every trait is on target, say so briefly and suggest a stretch goal instead.\n\nUSER\nRole: Coordinator\nRole persona: Keeps handovers between two shifts clean. Owns the checklist and makes sure nothing is lost between one team and the next.\nFirst name: Sam\nTrait results (1-5 scale):\nAnchor: 3.5 (target 3.5, on target)\nKindle: 3 (target 3, on target)\nLattice: 4.5 (target 4.5, on target)\nHorizon: 3 (target 3, on target)\nTheir own comment: (none)",
+      "prompt_note": "This is the prompt the project's own code assembled from the invented answers above. The writing rules are the project's own; the two opening lines were changed so they do not name the company or the questionnaire.",
+      "output": "Sam, your results line up closely with what the Coordinator role needs, which is a good place to be. Your eye for structure keeps handovers clean, and your even approach means the next shift inherits calm rather than confusion. As a stretch goal, look slightly further ahead than the checklist: note anything that might trip up tomorrow's handover, not just today's. At your next team huddle, suggest a quick round where each shift names the handover item it most often has to chase.",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "checker-two-big-gaps",
+      "label": "Quality checker: no comment, two big gaps",
+      "input": {
+        "Person": "Jo (invented)",
+        "Role": "Quality Checker",
+        "Answers to the 8 questions": "2, 2, 3, 3, 2, 2, 3, 3",
+        "Their comment": "(none)",
+        "Trait results worked out by the script": "Anchor 2, Kindle 2, Lattice 3, Horizon 3"
+      },
+      "prompt": "SYSTEM\nWrite a brief note for one member of staff about how they work.\nBase it on their questionnaire results and the role description provided.\nRules:\n1. Start with the strongest trait relative to the role target, never with a weakness.\n2. Mention at most two gaps, and frame each as a habit to try this month, not a flaw.\n3. Never say \"score\", \"target\" or any number. Translate them into plain behaviour.\n4. Use the person's first name once, in the first sentence.\n5. Refer to their own comment if they left one, in a way that shows it was read.\n6. Keep it under 120 words, warm and direct, British spelling, no bullet points.\n7. End with one concrete suggestion for their next team huddle.\n8. If every trait is on target, say so briefly and suggest a stretch goal instead.\n\nUSER\nRole: Quality Checker\nRole persona: Checks finished work against a written standard and signs it off. Spends most of the day checking on their own and keeps a careful record.\nFirst name: Jo\nTrait results (1-5 scale):\nAnchor: 2 (target 4, well below the role target)\nKindle: 2 (target 2, on target)\nLattice: 3 (target 5, well below the role target)\nHorizon: 3 (target 3, on target)\nTheir own comment: (none)",
+      "prompt_note": "This is the prompt the project's own code assembled from the invented answers above. The writing rules are the project's own; the two opening lines were changed so they do not name the company or the questionnaire.",
+      "output": "Jo, you look ahead well, spotting what might go wrong with a piece of work before it reaches you, and your quiet, independent style suits long stretches of checking on your own. This month, try building a little more structure into each check: work through the written standard in the same order every time and tick each line as you go, so nothing depends on memory. It is also worth practising staying steady when something fails, pausing to log it calmly before deciding what to do next. At your next team huddle, share an item from your log that others could catch earlier.",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "scheduler-long-comment",
+      "label": "Scheduler: a very long comment",
+      "input": {
+        "Person": "Kit (invented)",
+        "Role": "Scheduler",
+        "Answers to the 8 questions": "3, 4, 4, 5, 4, 4, 5, 4",
+        "Their comment": "Honestly the hardest part is that requests arrive by three different routes, half of them on the same afternoon, and by the time I have lined them up somebody has already promised a date I cannot meet, so most of my week is spent unpicking promises rather than planning",
+        "Trait results worked out by the script": "Anchor 3.5, Kindle 4, Lattice 4.5, Horizon 4.5"
+      },
+      "prompt": "SYSTEM\nWrite a brief note for one member of staff about how they work.\nBase it on their questionnaire results and the role description provided.\nRules:\n1. Start with the strongest trait relative to the role target, never with a weakness.\n2. Mention at most two gaps, and frame each as a habit to try this month, not a flaw.\n3. Never say \"score\", \"target\" or any number. Translate them into plain behaviour.\n4. Use the person's first name once, in the first sentence.\n5. Refer to their own comment if they left one, in a way that shows it was read.\n6. Keep it under 120 words, warm and direct, British spelling, no bullet points.\n7. End with one concrete suggestion for their next team huddle.\n8. If every trait is on target, say so briefly and suggest a stretch goal instead.\n\nUSER\nRole: Scheduler\nRole persona: Builds next week's plan from incoming requests. Talks to several teams every day and needs to spot clashes before they happen.\nFirst name: Kit\nTrait results (1-5 scale):\nAnchor: 3.5 (target 3.5, on target)\nKindle: 4 (target 3, well above the role target)\nLattice: 4.5 (target 4, a little above the role target)\nHorizon: 4.5 (target 5, a little below the role target)\nTheir own comment: Honestly the hardest part is that requests arrive by three different routes, half of them on the same afternoon, and by the time I have lined them up somebody has already promised a date I cannot meet, so most of my week is spent unpicking promises rather than planning",
+      "prompt_note": "This is the prompt the project's own code assembled from the invented answers above. The writing rules are the project's own; the two opening lines were changed so they do not name the company or the questionnaire.",
+      "output": "Kit, you get people moving more than most schedulers do, and that energy helps when several teams need to agree on a plan. Your follow-through is strong too, so what you commit to tends to hold. You mentioned that requests arrive by different routes and that dates get promised before you have lined them up. A habit to try this month: look a little further ahead by asking each team for its likely requests before the week starts, so fewer arrive as surprises. At your next team huddle, propose that nobody promises a date until it has been through the plan.",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "unknown-role",
+      "label": "Unknown role: skipped by the script",
+      "input": {
+        "Person": "Alex (invented)",
+        "Role": "Visitor Guide",
+        "Answers to the 8 questions": "3, 5, 2, 3, 3, 5, 2, 3",
+        "Their comment": "New starter"
+      },
+      "prompt": "No prompt is built. The script only writes notes for roles that have a persona; everyone else is left for a person to handle.",
+      "prompt_note": "This is the script's real behaviour for a role it does not recognise.",
+      "output": "No note is written. This role has no persona in the sheet, so the script skips the person, and a member of the people team writes their feedback by hand.",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    }
+  ],
+  "not_shown": [
+    "The company's name, industry or size",
+    "Real staff, their answers or their comments",
+    "The real roles, role descriptions and target values",
+    "The questionnaire's own name",
+    "Any key, spreadsheet link or web app link"
+  ]
+}

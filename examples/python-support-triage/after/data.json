@@ -1,0 +1,121 @@
+{
+  "title": "Support email triage",
+  "tagline": "Sorts each customer email by topic and urgency, looks up the order, and drafts a reply for a person to check.",
+  "what_it_does": [
+    "An online homeware shop gets a steady stream of customer emails: late parcels, refunds, broken items, questions. This Python script reads each new email and asks Claude to sort it into one of five topics with an urgency from 1 to 3. Anything that sounds like a safety problem is always treated as most urgent.",
+    "The script then finds the order number, looks up the order, and asks Claude to draft a reply that follows the shop's policy and tone. Urgent emails and high-value orders are flagged for a manager. A person on the support team reviews each draft before it goes out."
+  ],
+  "built_with": "Python (standard library only), the Anthropic API, a CSV order table",
+  "diagram_caption": "Blue steps are automated. The dashed orange step is done by a person.",
+  "cases": [
+    {
+      "id": "d-01",
+      "label": "Safety: a spark from the base",
+      "input": {
+        "From": "Ines Example (invented)",
+        "Subject": "Sparks from the base",
+        "Email": "Hello, my kettle (order EX-300101) gave off a small spark from the base when I switched it on this morning. I have unplugged it. Is it safe?",
+        "Order lookup (the project's code)": "Order EX-300101: Stainless steel kettle, status delivered, shipped 2026-05-02, value GBP 58.00"
+      },
+      "prompt": "SYSTEM\nSort each customer email for an online homeware store.\nChoose exactly one topic: refund, late_parcel, damaged_item, product_question, other.\nUrgency: 1 = routine, 2 = customer is waiting on us, 3 = angry, repeated contact, safety issue or legal threat.\nAny mention of scalding, sparks, burning smell or a cracked element is urgency 3 whatever the tone.\nReply with JSON only: {\"topic\": \"...\", \"urgency\": 1, \"reason\": \"one short sentence\"}\n\nUSER\nSubject: Sparks from the base\n\nHello, my kettle (order EX-300101) gave off a small spark from the base when I switched it on this morning. I have unplugged it. Is it safe?",
+      "prompt_note": "This is the first of the project's two prompts, the one that sorts the email, filled in by the project's own code. Only the opening line was changed, to remove the shop's name. The second prompt drafts the reply using the shop's private refund, delivery and safety policy, so it is not shown. 'Flagged for a manager' is the project's own rule, applied to the sorting result and the order.",
+      "output": "Step 1, sorting: topic damaged_item, urgency 3. A spark from the base is a safety issue.\nFlagged for a manager: yes\n\nStep 2, draft reply for a person to check:\n\nHi Ines,\n\nThank you for unplugging the kettle straight away. Please do not use it again. A manager will call you within one working day to arrange a replacement or a refund, whichever you prefer, and to collect the faulty kettle at no cost to you.\n\nKind regards,\nThe support team",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "d-02",
+      "label": "Late parcel, polite customer",
+      "input": {
+        "From": "Tom Sample (invented)",
+        "Subject": "Teapot tracking",
+        "Email": "Hi, order EX-300102 was marked shipped on the 4th and the tracking has not changed since. Could you take a look? Thanks, Tom",
+        "Order lookup (the project's code)": "Order EX-300102: Glass teapot, status shipped, shipped 2026-05-04, value GBP 32.50"
+      },
+      "prompt": "SYSTEM\nSort each customer email for an online homeware store.\nChoose exactly one topic: refund, late_parcel, damaged_item, product_question, other.\nUrgency: 1 = routine, 2 = customer is waiting on us, 3 = angry, repeated contact, safety issue or legal threat.\nAny mention of scalding, sparks, burning smell or a cracked element is urgency 3 whatever the tone.\nReply with JSON only: {\"topic\": \"...\", \"urgency\": 1, \"reason\": \"one short sentence\"}\n\nUSER\nSubject: Teapot tracking\n\nHi, order EX-300102 was marked shipped on the 4th and the tracking has not changed since. Could you take a look? Thanks, Tom",
+      "prompt_note": "This is the first of the project's two prompts, the one that sorts the email, filled in by the project's own code. Only the opening line was changed, to remove the shop's name. The second prompt drafts the reply using the shop's private refund, delivery and safety policy, so it is not shown. 'Flagged for a manager' is the project's own rule, applied to the sorting result and the order.",
+      "output": "Step 1, sorting: topic late_parcel, urgency 2. The customer is waiting on a parcel with no tracking updates.\nFlagged for a manager: no\n\nStep 2, draft reply for a person to check:\n\nHi Tom,\n\nThanks for letting us know. Your teapot left us on the 4th and the tracking has not moved since, which is longer than it should be. We have asked the courier to trace it. If there is still no update after five working days from dispatch, you can choose a replacement or a refund and we will arrange it straight away.\n\nKind regards,\nThe support team",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "d-03",
+      "label": "Refund on a high-value order",
+      "input": {
+        "From": "Priya Example (invented)",
+        "Subject": "Return",
+        "Email": "The copper kettle (EX-300103) is lovely but too big for my kitchen. Can I send it back for a refund?",
+        "Order lookup (the project's code)": "Order EX-300103: Copper pour-over kettle, status delivered, shipped 2026-04-28, value GBP 189.00"
+      },
+      "prompt": "SYSTEM\nSort each customer email for an online homeware store.\nChoose exactly one topic: refund, late_parcel, damaged_item, product_question, other.\nUrgency: 1 = routine, 2 = customer is waiting on us, 3 = angry, repeated contact, safety issue or legal threat.\nAny mention of scalding, sparks, burning smell or a cracked element is urgency 3 whatever the tone.\nReply with JSON only: {\"topic\": \"...\", \"urgency\": 1, \"reason\": \"one short sentence\"}\n\nUSER\nSubject: Return\n\nThe copper kettle (EX-300103) is lovely but too big for my kitchen. Can I send it back for a refund?",
+      "prompt_note": "This is the first of the project's two prompts, the one that sorts the email, filled in by the project's own code. Only the opening line was changed, to remove the shop's name. The second prompt drafts the reply using the shop's private refund, delivery and safety policy, so it is not shown. 'Flagged for a manager' is the project's own rule, applied to the sorting result and the order.",
+      "output": "Step 1, sorting: topic refund, urgency 1. A polite return request within the usual period.\nFlagged for a manager: yes\n\nStep 2, draft reply for a person to check:\n\nHi Priya,\n\nOf course. You are within the return period, so a refund is no problem. We will email you a prepaid returns label today; once the kettle is on its way back, the refund goes to your original payment method.\n\nKind regards,\nThe support team",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "d-04",
+      "label": "Question, no order number",
+      "input": {
+        "From": "Sam Demo (invented)",
+        "Subject": "Dishwasher?",
+        "Email": "Quick question before I order: can the glass teapot go in the dishwasher?",
+        "Order lookup (the project's code)": "No order number found."
+      },
+      "prompt": "SYSTEM\nSort each customer email for an online homeware store.\nChoose exactly one topic: refund, late_parcel, damaged_item, product_question, other.\nUrgency: 1 = routine, 2 = customer is waiting on us, 3 = angry, repeated contact, safety issue or legal threat.\nAny mention of scalding, sparks, burning smell or a cracked element is urgency 3 whatever the tone.\nReply with JSON only: {\"topic\": \"...\", \"urgency\": 1, \"reason\": \"one short sentence\"}\n\nUSER\nSubject: Dishwasher?\n\nQuick question before I order: can the glass teapot go in the dishwasher?",
+      "prompt_note": "This is the first of the project's two prompts, the one that sorts the email, filled in by the project's own code. Only the opening line was changed, to remove the shop's name. The second prompt drafts the reply using the shop's private refund, delivery and safety policy, so it is not shown. 'Flagged for a manager' is the project's own rule, applied to the sorting result and the order.",
+      "output": "Step 1, sorting: topic product_question, urgency 1. A question before buying.\nFlagged for a manager: no\n\nStep 2, draft reply for a person to check:\n\nHi Sam,\n\nGood question. The glass teapot is dishwasher safe, but the infuser lasts longer if you rinse it by hand. We cannot promise an exact delivery date, but orders usually leave us within two working days.\n\nKind regards,\nThe support team",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "d-05",
+      "label": "Angry, fourth email, no order number",
+      "input": {
+        "From": "Jordan Sample (invented)",
+        "Subject": "STILL WAITING",
+        "Email": "Fourth email this week. Nobody replies. If I hear nothing by tomorrow I will report you to trading standards.",
+        "Order lookup (the project's code)": "No order number found."
+      },
+      "prompt": "SYSTEM\nSort each customer email for an online homeware store.\nChoose exactly one topic: refund, late_parcel, damaged_item, product_question, other.\nUrgency: 1 = routine, 2 = customer is waiting on us, 3 = angry, repeated contact, safety issue or legal threat.\nAny mention of scalding, sparks, burning smell or a cracked element is urgency 3 whatever the tone.\nReply with JSON only: {\"topic\": \"...\", \"urgency\": 1, \"reason\": \"one short sentence\"}\n\nUSER\nSubject: STILL WAITING\n\nFourth email this week. Nobody replies. If I hear nothing by tomorrow I will report you to trading standards.",
+      "prompt_note": "This is the first of the project's two prompts, the one that sorts the email, filled in by the project's own code. Only the opening line was changed, to remove the shop's name. The second prompt drafts the reply using the shop's private refund, delivery and safety policy, so it is not shown. 'Flagged for a manager' is the project's own rule, applied to the sorting result and the order.",
+      "output": "Step 1, sorting: topic other, urgency 3. Repeated contact and a complaint threat.\nFlagged for a manager: yes\n\nStep 2, draft reply for a person to check:\n\nHi Jordan,\n\nI am sorry you have had to write so many times without a reply; that should not have happened. I could not find an order number in your email. Could you reply with it, or with the email address you ordered with? A manager is looking at your case today and will call you within one working day.\n\nKind regards,\nThe support team",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    },
+    {
+      "id": "d-06",
+      "label": "Written in French",
+      "input": {
+        "From": "Luc Demo (invented)",
+        "Subject": "Commande en retard",
+        "Email": "Bonjour, j'ai commandé une casserole (EX-300104) il y a dix jours et elle n'est toujours pas partie. Pouvez-vous m'aider ?",
+        "Order lookup (the project's code)": "Order EX-300104: Enamel milk pan, status processing, shipped not yet, value GBP 24.00"
+      },
+      "prompt": "SYSTEM\nSort each customer email for an online homeware store.\nChoose exactly one topic: refund, late_parcel, damaged_item, product_question, other.\nUrgency: 1 = routine, 2 = customer is waiting on us, 3 = angry, repeated contact, safety issue or legal threat.\nAny mention of scalding, sparks, burning smell or a cracked element is urgency 3 whatever the tone.\nReply with JSON only: {\"topic\": \"...\", \"urgency\": 1, \"reason\": \"one short sentence\"}\n\nUSER\nSubject: Commande en retard\n\nBonjour, j'ai commandé une casserole (EX-300104) il y a dix jours et elle n'est toujours pas partie. Pouvez-vous m'aider ?",
+      "prompt_note": "This is the first of the project's two prompts, the one that sorts the email, filled in by the project's own code. Only the opening line was changed, to remove the shop's name. The second prompt drafts the reply using the shop's private refund, delivery and safety policy, so it is not shown. 'Flagged for a manager' is the project's own rule, applied to the sorting result and the order.",
+      "output": "Step 1, sorting: topic late_parcel, urgency 2. Order not yet dispatched after ten days (email in French).\nFlagged for a manager: no\n\nStep 2, draft reply for a person to check:\n\nBonjour Luc,\n\nMerci pour votre message, et désolés pour l'attente. Votre casserole n'est pas encore partie de chez nous. Nous vérifions pourquoi aujourd'hui et nous vous écrirons demain avec des nouvelles. Si vous préférez, nous pouvons aussi annuler la commande et vous rembourser.\n\nCordialement,\nL'équipe du service client",
+      "provenance": {
+        "kind": "illustrative",
+        "label": "Illustrative, written by Claude"
+      }
+    }
+  ],
+  "not_shown": [
+    "The shop's name, customers, orders or staff",
+    "The wording of the shop's refund, delivery and safety policy",
+    "The order value that triggers escalation",
+    "How often it runs and the computer it runs on",
+    "Any key, private link or network address"
+  ]
+}

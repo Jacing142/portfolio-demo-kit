@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 672" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
   <title id="t">How portfolio-demo-kit works</title>
-  <desc id="d">You upload a private project, the tool lists everything sensitive and asks you what to keep, fake or remove, then builds a demo from invented data, scans it for leaks, and gives you a zip to publish yourself.</desc>
+  <desc id="d">You point the skill at a private project. It lists everything sensitive and asks you what to keep, fake or remove. Then it builds a demo from invented data, scans it for leaks and fixes what it finds, and you publish the result yourself.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
       <path d="M0,0 L10,5 L0,10 z" fill="#4d5b6e"/>
@@ -8,43 +8,43 @@
   </defs>
   <g>
     <rect x="32" y="16" width="296" height="64" rx="12" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
-    <text x="180" y="44" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Upload your project</text>
-    <text x="180" y="64" text-anchor="middle" font-size="12.5" fill="#4d5b6e">into your private copy</text>
+    <text x="180" y="44" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Point it at your project</text>
+    <text x="180" y="64" text-anchor="middle" font-size="12.5" fill="#4d5b6e">it works on a copy, never the original</text>
   </g>
   <line x1="180" y1="84" x2="180" y2="120" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
   <text x="192" y="106" font-size="12.5" fill="#4d5b6e">project files</text>
   <g>
     <rect x="32" y="124" width="296" height="64" rx="12" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
-    <text x="180" y="152" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">1. Scan my project</text>
-    <text x="180" y="172" text-anchor="middle" font-size="12.5" fill="#4d5b6e">reads it, finds sensitive items</text>
+    <text x="180" y="152" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">It lists what is sensitive</text>
+    <text x="180" y="172" text-anchor="middle" font-size="12.5" fill="#4d5b6e">people, client details, keys</text>
   </g>
   <line x1="180" y1="192" x2="180" y2="228" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="192" y="214" font-size="12.5" fill="#4d5b6e">issue with a table</text>
+  <text x="192" y="214" font-size="12.5" fill="#4d5b6e">one table of findings</text>
   <g>
     <rect x="32" y="232" width="296" height="64" rx="12" fill="#fdf0e4" stroke="#b35400" stroke-width="2" stroke-dasharray="6 4"/>
     <text x="180" y="260" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Person: you decide</text>
-    <text x="180" y="280" text-anchor="middle" font-size="12.5" fill="#4d5b6e">keep, fake or remove; then /build</text>
+    <text x="180" y="280" text-anchor="middle" font-size="12.5" fill="#4d5b6e">keep, fake or remove; a few questions</text>
   </g>
   <line x1="180" y1="300" x2="180" y2="336" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
   <text x="192" y="322" font-size="12.5" fill="#4d5b6e">your answers</text>
   <g>
     <rect x="32" y="340" width="296" height="64" rx="12" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
-    <text x="180" y="368" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">2. Build the demo</text>
-    <text x="180" y="388" text-anchor="middle" font-size="12.5" fill="#4d5b6e">invented data, real prompts</text>
+    <text x="180" y="368" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">It builds the demo</text>
+    <text x="180" y="388" text-anchor="middle" font-size="12.5" fill="#4d5b6e">invented data, your project&#x27;s own logic</text>
   </g>
   <line x1="180" y1="408" x2="180" y2="444" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="192" y="430" font-size="12.5" fill="#4d5b6e">demo page</text>
+  <text x="192" y="430" font-size="12.5" fill="#4d5b6e">page, diagram, write-up</text>
   <g>
     <rect x="32" y="448" width="296" height="64" rx="12" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
     <text x="180" y="476" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Leak scan</text>
     <text x="180" y="496" text-anchor="middle" font-size="12.5" fill="#4d5b6e">fixes and rescans up to 3 times</text>
   </g>
   <line x1="180" y1="516" x2="180" y2="552" stroke="#4d5b6e" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="192" y="538" font-size="12.5" fill="#4d5b6e">demo.zip + report</text>
+  <text x="192" y="538" font-size="12.5" fill="#4d5b6e">a clean demo folder</text>
   <g>
     <rect x="32" y="556" width="296" height="64" rx="12" fill="#fdf0e4" stroke="#b35400" stroke-width="2" stroke-dasharray="6 4"/>
     <text x="180" y="584" text-anchor="middle" font-size="15" font-weight="600" fill="#1b2533">Person: you publish</text>
-    <text x="180" y="604" text-anchor="middle" font-size="12.5" fill="#4d5b6e">new public repo, Pages or Vercel</text>
+    <text x="180" y="604" text-anchor="middle" font-size="12.5" fill="#4d5b6e">a new public repo, Pages or Vercel</text>
   </g>
   <rect x="32" y="642" width="18" height="14" rx="3" fill="#e8f0fc" stroke="#1f5fbf" stroke-width="2"/>
   <text x="56" y="654" font-size="12.5" fill="#1b2533">Automated</text>
