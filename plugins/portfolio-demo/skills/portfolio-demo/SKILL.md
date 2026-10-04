@@ -113,14 +113,14 @@ Write `WORK/decisions.json`:
 `keep_strings` is the scanner's allowlist: only exact strings from the project that the owner said
 to keep (for example trait names). Never add a SECRET. Never add anything to get a scan to pass.
 
-`never_show` is the scanner's deny list: the exact client, product, staff and instrument names the owner chose to FAKE or REMOVE, plus any other short term that must not appear. They are checked as whole words at any length. Never add a SECRET (those are caught by the secret patterns).
-
 - If the owner kept the prompt wording, add each kept line of the prompt, exactly as written.
 - If the owner kept the logic and the demo will show prompts assembled by the project's code, also
   add the fixed text that code writes into them (labels such as `Role persona:`, band phrases such
   as `a little below the role target`, fallback messages such as `No order number found.`). List
   them now, while the owner is deciding: they are part of what was kept, and forgetting them is the
   most common reason a first scan fails.
+
+`never_show` is the scanner's deny list: the exact client, product, staff and instrument names the owner chose to FAKE or REMOVE, plus any other short term that must not appear. They are checked as whole words at any length. Never add a SECRET (those are caught by the secret patterns).
 
 ## Phase 3: Plant canaries
 
