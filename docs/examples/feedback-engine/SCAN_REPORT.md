@@ -32,4 +32,4 @@ So "0 found" means the checks ran and found nothing, not that they never ran.
 ## Checked again when this folder was added to portfolio-demo-kit
 
 The folder was searched again for API keys, email addresses, long ID-like strings and vendor or
-instrument names. None were found.
+instrument names. None were found. Trait and scale names were kept on purpose, with the client's approval.

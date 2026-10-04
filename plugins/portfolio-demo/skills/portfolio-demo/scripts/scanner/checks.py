@@ -96,6 +96,21 @@ def canaries(outputs, canary_list):
     return findings
 
 
+def denied(outputs, terms):
+    """Names and terms the owner chose to FAKE or REMOVE, matched as whole words at any length."""
+    findings = []
+    for term in terms:
+        key = normalize(term)
+        if len(key) < 2:
+            continue
+        rx = re.compile(r"(?<![^\W_])" + re.escape(key) + r"(?![^\W_])")
+        for rel, raw, norm in outputs:
+            if rx.search(norm) or rx.search(normalize(strip_tags(raw))):
+                findings.append({"check": "denied", "file": rel, "text": term,
+                                 "where": "owner decision", "severity": "fail"})
+    return findings
+
+
 def hidden_files(root_files):
     return [{"check": "hidden_file", "file": rel, "text": rel, "where": "", "severity": "fail"}
             for rel in root_files if any(p.startswith(".") for p in rel.split("/"))]

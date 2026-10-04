@@ -48,6 +48,7 @@ The results of running it on both bundled examples are in [`examples/*/after/`](
 
 - **Use it only on work you are allowed to share**, and allowed to send to an AI provider. If you are not sure, ask your client first.
 - **It reduces risk. It does not guarantee it.** Read every word of the demo before you publish it.
+- **The leak scan looks for copied text.** It can miss reworded text (an optional AI check looks for this), numbers on their own, and long text broken up by page markup. That is why you read every word.
 - It never writes into your project, never publishes anything, and never keeps keys or passwords, whatever you choose. See [DISCLAIMER.md](DISCLAIMER.md).
 
 ## FAQ

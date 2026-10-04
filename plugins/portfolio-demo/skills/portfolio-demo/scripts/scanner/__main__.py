@@ -32,7 +32,7 @@ def main(argv=None):
 
     s = sub.add_parser("scan", help="scan the demo output folder")
     s.add_argument("--source", required=True, help="the project copy the demo was built from")
-    s.add_argument("--output", required=True, help="the folder that goes into demo.zip")
+    s.add_argument("--output", required=True, help="the demo output folder")
     s.add_argument("--canaries")
     s.add_argument("--allow", help="decisions.json (keep_strings) or a JSON list of kept strings")
     s.add_argument("--public", action="append", default=None,
@@ -51,7 +51,11 @@ def main(argv=None):
         if not Path(args.src).is_dir():
             print(f"Folder not found: {args.src}", file=sys.stderr)
             return 2
-        planted = canaries.plant(args.src, args.dst, canaries.make())
+        try:
+            planted = canaries.plant(args.src, args.dst, canaries.make())
+        except ValueError as e:
+            print(e, file=sys.stderr)
+            return 2
         canaries.save(planted, args.out)
         print(f"Planted {len(planted)} canaries in {args.dst}")
         return 0

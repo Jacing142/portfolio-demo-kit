@@ -22,7 +22,7 @@ SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv"}
 LITERAL_RE = re.compile(r'"((?:[^"\\\n]|\\.){3,})"|\'((?:[^\'\\\n]|\\.){3,})\'|`((?:[^`\\]|\\.){3,})`')
 # Python-style triple-quoted blocks
 TRIPLE_RE = re.compile(r'"""(.*?)"""|\'\'\'(.*?)\'\'\'', re.S)
-WORD_RE = re.compile(r"[a-z0-9]+(?:'[a-z0-9]+)?")
+WORD_RE = re.compile(r"[^\W_]+(?:'[^\W_]+)?")
 JSON_STR_RE = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
 

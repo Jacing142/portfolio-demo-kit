@@ -11,6 +11,7 @@ Python 3.11+ standard library only. No project-specific code: every setting is i
 | `word_run` | yes | Any run of `ngram_words` (default 6) consecutive words copied from any project file. |
 | `pattern:*` | yes | API keys (Anthropic, OpenAI, AWS, GitHub, Slack, Google), JWTs, private keys, `password = "..."`, emails outside the allowed domains, links outside the allowed hosts, private IP addresses, long mixed-case IDs, plus any `extra_patterns`. |
 | `canary:*` | yes | Any of the 10 canaries planted in the working copy. All must be absent. |
+| `denied` | yes | Names and terms the owner chose to fake or remove (`never_show` in `decisions.json`), as whole words at any length, including when split by page markup. |
 | `data_match` | yes | `index.html`'s inline data and `data.json` must hold the same data. |
 | `hidden_file` | yes | Hidden files or folders (such as `.git`) in the output. |
 | negative control | yes | One real project string is planted in a temporary copy of the output; the scan must catch it, or the whole scan fails. |

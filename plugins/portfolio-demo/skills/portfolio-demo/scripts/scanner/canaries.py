@@ -52,7 +52,9 @@ def make(seed=None):
 
 def plant(src, dst, canaries):
     """Copy src to dst and insert every canary into the copy. Returns the canaries with locations."""
-    src, dst = Path(src), Path(dst)
+    src, dst = Path(src).resolve(), Path(dst).resolve()
+    if dst == src or src in dst.parents or dst in src.parents:
+        raise ValueError("The working copy must be a separate folder outside the project.")
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst, ignore=shutil.ignore_patterns(*SKIP_DIRS))

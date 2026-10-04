@@ -105,12 +105,15 @@ Write `WORK/decisions.json`:
   "proprietary_passages": ["text the owner marked PROPRIETARY, for the rewording check"],
   "confirmed_steps": ["steps the owner confirmed, in their words, for the diagram"],
   "do_not_state": ["things the owner does not want said publicly"],
+  "never_show": ["exact names and terms the owner chose to FAKE or REMOVE"],
   "owner_answers": ["short summary of each answer"]
 }
 ```
 
 `keep_strings` is the scanner's allowlist: only exact strings from the project that the owner said
 to keep (for example trait names). Never add a SECRET. Never add anything to get a scan to pass.
+
+`never_show` is the scanner's deny list: the exact client, product, staff and instrument names the owner chose to FAKE or REMOVE, plus any other short term that must not appear. They are checked as whole words at any length. Never add a SECRET (those are caught by the secret patterns).
 
 - If the owner kept the prompt wording, add each kept line of the prompt, exactly as written.
 - If the owner kept the logic and the demo will show prompts assembled by the project's code, also

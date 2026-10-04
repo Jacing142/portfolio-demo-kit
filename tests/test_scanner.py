@@ -91,6 +91,8 @@ class ExactStrings(Base):
         allow = scan.Allowlist()
         self.assertTrue(allow.covers("claude-sonnet-5"))
         self.assertFalse(allow.covers("quillmoor lending"))
+        self.assertFalse(allow.covers("o365-northwind-prod"))
+        self.assertFalse(allow.covers("claude-northwind-prod"))
 
     def test_text_line(self):
         self.add_to_page("Never mention the internal risk band to the applicant under any circumstances.")
@@ -115,6 +117,17 @@ class WordRuns(Base):
     def test_five_words_ok(self):
         self.add_to_page("Summarise the applicant note in.")
         self.assertNotIn("word_run", self.checks_hit(self.run_scan()))
+
+    def test_non_english_word_run(self):
+        source = self.tmp / "source"
+        shutil.copytree(SOURCE, source)
+        run = "שלום לכל הלקוחות שלנו בבקשה לשלוח את הטופס"
+        (source / "notes.txt").write_text("הערה פנימית: " + run + " עד יום חמישי.\n", encoding="utf-8")
+        (self.out / "README.md").write_text(
+            (self.out / "README.md").read_text(encoding="utf-8") + "\n" + " ".join(run.split()[:6]) + "\n",
+            encoding="utf-8")
+        report = scan.run(source, self.out, CFG, None, None, [])
+        self.assertIn("word_run", self.checks_hit(report))
 
 
 class Patterns(Base):
@@ -166,6 +179,22 @@ class Canaries(Base):
                          (SOURCE / "prompts" / "rules.txt").read_text())
         self.assertFalse(any(c["planted_in"].endswith((".txt", ".md")) and c["planted_in"] != "pdk-notes.txt" for c in cl))
 
+    def test_plant_refuses_same_folder(self):
+        src = self.tmp / "project"
+        shutil.copytree(SOURCE, src)
+        with self.assertRaises(ValueError):
+            canaries.plant(src, src, canaries.make(seed=4))
+        self.assertTrue((src / "people.csv").is_file())
+        self.assertTrue((src / "prompts" / "rules.txt").is_file())
+
+    def test_plant_refuses_folder_inside_project(self):
+        src = self.tmp / "project"
+        shutil.copytree(SOURCE, src)
+        with self.assertRaises(ValueError):
+            canaries.plant(src, src / "copy", canaries.make(seed=5))
+        self.assertTrue((src / "people.csv").is_file())
+        self.assertTrue((src / "prompts" / "rules.txt").is_file())
+
     def test_unique_per_run(self):
         a = {c["value"] for c in canaries.make()}
         b = {c["value"] for c in canaries.make()}
@@ -205,6 +234,36 @@ class Allowlist(Base):
         self.add_to_page("Always close with the phrase: your file stays with the Quillmoor desk.")
         report = scan.run(SOURCE, self.out, CFG, None, None, [public])
         self.assertEqual(report["findings"], [])
+
+
+class Denied(Base):
+    def deny(self, terms):
+        path = self.tmp / "decisions.json"
+        path.write_text(json.dumps({"keep_strings": [], "never_show": terms}))
+        return path
+
+    def test_term_in_readme_caught(self):
+        readme = self.out / "README.md"
+        readme.write_text(readme.read_text() + "\nBuilt for Zentro.\n")
+        hits = [f for f in self.run_scan(allow_path=self.deny(["Zentro"]))["findings"] if f["check"] == "denied"]
+        self.assertTrue(any(f["file"] == "README.md" for f in hits))
+
+    def test_term_split_by_svg_markup_caught(self):
+        (self.out / "diagram.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg"><text>Report for <tspan>Zentro</tspan></text></svg>')
+        hits = [f for f in self.run_scan(allow_path=self.deny(["Zentro"]))["findings"] if f["check"] == "denied"]
+        self.assertTrue(any(f["file"] == "diagram.svg" for f in hits))
+
+    def test_term_inside_longer_word_not_caught(self):
+        self.add_to_page("The Zentrofield team.")
+        self.assertNotIn("denied", self.checks_hit(self.run_scan(allow_path=self.deny(["Zentro"]))))
+
+    def test_decisions_without_never_show(self):
+        path = self.tmp / "decisions.json"
+        path.write_text(json.dumps({"keep_strings": []}))
+        report = self.run_scan(allow_path=path)
+        self.assertEqual(report["findings"], [])
+        self.assertTrue(report["clean"])
 
 
 class NegativeControl(Base):
