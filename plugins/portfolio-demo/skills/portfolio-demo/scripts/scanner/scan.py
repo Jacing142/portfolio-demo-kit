@@ -12,7 +12,7 @@ from .extract import normalize, output_texts, source_candidates, source_word_ind
 
 
 # Public model names (e.g. "claude-sonnet-5") appear in provenance labels and are not secrets.
-MODEL_ID_RE = re.compile(r"(?:claude|gpt|gemini|llama|mistral|o\d)[a-z0-9.\-]*")
+MODEL_ID_RE = re.compile(r"claude-(?:opus|sonnet|haiku|fable|mythos)-\d[a-z0-9.\-]*")
 
 
 class Allowlist:
@@ -53,6 +53,14 @@ def load_keep(path):
     if isinstance(data, list):
         return data, []
     return data.get("keep_strings", []), data.get("proprietary_passages", [])
+
+
+def load_deny(path):
+    """The "never_show" list from decisions.json, if present."""
+    if not path or not Path(path).exists():
+        return []
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return data.get("never_show", []) if isinstance(data, dict) else []
 
 
 def load_public(dirs):
@@ -123,6 +131,7 @@ def run(source, output, cfg, canaries_path=None, allow_path=None, public_dirs=()
     outputs, findings = _leak_checks(out_dir, candidates, source_docs, allow, cfg, canary_list)
     findings += checks.hidden_files(all_files(out_dir))
     findings += checks.data_match(out_dir)
+    findings += checks.denied(outputs, load_deny(allow_path))
 
     warnings, usage = [], {}
     if paraphrase_on and protected:
