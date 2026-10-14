@@ -8,7 +8,8 @@ import tempfile
 from pathlib import Path
 
 from . import checks, paraphrase
-from .extract import normalize, output_texts, source_candidates, source_word_index, words
+from .extract import (_json_strings, normalize, output_texts, read_text, source_candidates,
+                      source_word_index, words)
 
 
 # Public model names (e.g. "claude-sonnet-5") appear in provenance labels and are not secrets.
@@ -75,17 +76,44 @@ def load_public(dirs):
     return texts
 
 
+def contract_check(out_dir, allowed):
+    """OUTPUT may hold only the files the skill promises: anything else (receipts, working files) fails."""
+    if allowed is None:
+        return []
+    return [{"check": "contract", "file": rel, "text": rel, "where": "not an allowed demo file",
+             "severity": "fail"} for rel in all_files(out_dir) if rel not in allowed]
+
+
+def extra_texts(paths):
+    """Working files that are not shipped but feed the demo (Archify JSON, video scenes): scanned the same way."""
+    out = []
+    for p in paths or []:
+        p = Path(p)
+        files = [p] if p.is_file() else sorted(x for x in p.rglob("*") if x.is_file()) if p.is_dir() else []
+        for f in files:
+            raw = read_text(f)
+            if raw is None:
+                continue
+            variants = [raw, html.unescape(raw), _json_strings(raw)]
+            joined = "\n".join(variants)
+            out.append((f"(working file) {f.name}", joined, normalize(joined)))
+    return out
+
+
 def all_files(root):
     root = Path(root)
-    return [str(p.relative_to(root)) for p in sorted(root.rglob("*")) if p.is_file()]
+    return [p.relative_to(root).as_posix() for p in sorted(root.rglob("*")) if p.is_file()]
 
 
-def _leak_checks(out_dir, candidates, source_docs, allow, cfg, canary_list):
-    outputs = output_texts(out_dir)
+def _leak_checks(out_dir, candidates, source_docs, allow, cfg, canary_list, extra=()):
+    outputs = output_texts(out_dir) + list(extra)
     found = []
     found += checks.exact_strings(outputs, candidates, allow)
     found += checks.word_runs(outputs, source_docs, cfg["ngram_words"], allow)
-    found += checks.secret_patterns(outputs, cfg)
+    # A pattern match that is part of this kit's own public files (e.g. the font and code Archify
+    # bundles into diagram.html) is not a secret.
+    found += [f for f in checks.secret_patterns(outputs, cfg)
+              if not (allow.public and normalize(f["text"]) in allow.public)]
     found += checks.canaries(outputs, canary_list)
     return outputs, found
 
@@ -117,7 +145,7 @@ def negative_control(out_dir, candidates, allow, cfg):
 
 
 def run(source, output, cfg, canaries_path=None, allow_path=None, public_dirs=(), paraphrase_on=False,
-        api=paraphrase.call_api):
+        api=paraphrase.call_api, extra_paths=(), contract=None):
     out_dir = Path(output)
     keep, protected = load_keep(allow_path)
     allow = Allowlist(keep, load_public(public_dirs), cfg["ngram_words"])
@@ -128,8 +156,10 @@ def run(source, output, cfg, canaries_path=None, allow_path=None, public_dirs=()
         from .canaries import load
         canary_list = load(canaries_path)
 
-    outputs, findings = _leak_checks(out_dir, candidates, source_docs, allow, cfg, canary_list)
+    extra = extra_texts(extra_paths)
+    outputs, findings = _leak_checks(out_dir, candidates, source_docs, allow, cfg, canary_list, extra)
     findings += checks.hidden_files(all_files(out_dir))
+    findings += contract_check(out_dir, contract)
     findings += checks.data_match(out_dir)
     findings += checks.denied(outputs, load_deny(allow_path))
 
@@ -143,6 +173,7 @@ def run(source, output, cfg, canaries_path=None, allow_path=None, public_dirs=()
     return {
         "clean": clean,
         "files_scanned": all_files(out_dir),
+        "working_files_scanned": [name for name, _, _ in extra],
         "source_strings_checked": len(candidates),
         "allowlist_entries": len(keep),
         "canaries": {"planted": len(canary_list), "found": len(canary_hits)},
@@ -163,7 +194,8 @@ def to_markdown(report):
     lines = ["## Leak scan: " + ("PASSED" if report["clean"] else "FAILED"), ""]
     nc = report["negative_control"]
     lines += [
-        f"- Files scanned: {len(report['files_scanned'])}",
+        f"- Files scanned: {len(report['files_scanned'])}"
+        + (f", plus {len(report.get('working_files_scanned', []))} working files" if report.get("working_files_scanned") else ""),
         f"- Strings from your project checked: {report['source_strings_checked']}",
         f"- Canaries found in the demo: {report['canaries']['found']} of {report['canaries']['planted']} (must be 0)",
         f"- Scanner self-test (a known string planted on purpose): {nc['detail']}",
@@ -190,6 +222,8 @@ def summary_counts(report):
         "| Check | Result |",
         "|---|---|",
         f"| Files in this demo scanned | {len(report['files_scanned'])} |",
+        *([f"| Working files the demo was drawn from, also scanned | {len(report['working_files_scanned'])} |"]
+          if report.get("working_files_scanned") else []),
         f"| Strings from the private project checked against the demo | {report['source_strings_checked']} |",
         f"| Exact copies found | {sum(f['check'] == 'exact' for f in report['findings'])} |",
         f"| Copied runs of words found | {sum(f['check'] == 'word_run' for f in report['findings'])} |",

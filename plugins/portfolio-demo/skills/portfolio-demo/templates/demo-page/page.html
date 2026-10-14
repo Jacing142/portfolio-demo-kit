@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; frame-src 'self';">
 <title>{{TITLE}}</title>
 <style>
   :root {
@@ -33,6 +33,14 @@
   .built { font-size: .9rem; color: var(--muted); }
   figure { margin: 0; }
   .diagram svg { width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto; }
+  .diagram-live { display: none; }
+  .diagram-live { width: min(1120px, calc(100vw - 32px)); position: relative; left: 50%; transform: translateX(-50%); }
+  .diagram-live iframe { display: block; width: 100%; height: min(680px, 80vh); border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+  .diagram-live p { margin: 8px 0 0; font-size: .9rem; text-align: center; }
+  @media (min-width: 600px) {
+    .has-live .diagram-live { display: block; }
+    .has-live .diagram-static { display: none; }
+  }
   figcaption { font-size: .9rem; color: var(--muted); margin-top: 8px; }
   label { display: block; font-weight: 600; margin-bottom: 6px; }
   select {
@@ -80,8 +88,9 @@
 
   <section aria-labelledby="how">
     <h2 id="how">How it works</h2>
-    <figure class="diagram">
-      {{DIAGRAM_SVG}}
+    <figure class="diagram{{DIAGRAM_CLASS}}">
+      <div class="diagram-static">{{DIAGRAM_SVG}}</div>
+      {{DIAGRAM_LIVE}}
       <figcaption>{{DIAGRAM_CAPTION}}</figcaption>
     </figure>
   </section>

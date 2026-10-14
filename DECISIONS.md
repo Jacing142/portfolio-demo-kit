@@ -64,3 +64,41 @@ Decisions made while turning this repository into an installable skill with a pu
 31. All internal links and images are relative. The only external link on the site is to the GitHub repository. A Content-Security-Policy blocks all outside requests.
 32. Example cards say "Real client project" (solid blue) or "Invented project" (dashed orange), so shape tells them apart as well as colour. Card images and the README image are real headless-browser screenshots of the pages.
 33. "How it was made safe" links go to the `.md` files, which GitHub Pages shows as plain text.
+
+## Interactive diagram (Archify), version 1.1.0
+
+34. **Archify is vendored, not required as a separate install.** `vendor/archify/` holds the runtime folder of tt-a1i/archify (MIT) at the commit in `VENDORED_FROM`: about 4.5 MB, without its 13 MB of examples. Rewriting it was ruled out: it is about 43,000 lines of renderer code, not a prompt. Vendoring keeps the install to one line and pins the version.
+35. Archify's `SKILL.md` is kept as `ARCHIFY_SKILL.md`, so skill installers (`npx skills add`) list two skills, not three. Our own rules for using it are in `templates/diagram/ARCHIFY.md`.
+36. **It sits alongside `diagram.svg`, not instead of it.** Both show the same code-backed and owner-confirmed steps. The page shows the SVG below 600px wide and embeds `diagram.html` in a sandboxed iframe (`allow-scripts allow-downloads`) at 600px and wider, with a link to open it full screen. The page's policy adds only `frame-src 'self'`.
+37. **Fallback, not failure.** Without Node.js 18+, `render_diagram.py` exits 3 and removes any stale `diagram.html`; the demo ships with the SVG only. Without Chrome, Archify skips its browser check; the diagram is still written and the script says it was not checked in a browser. If Playwright's Chromium is installed it is used for that check.
+38. **A person's step is told apart by more than colour:** its own lane labelled "Person: done by hand", the person icon, the tag "by a person", and a dashed group labelled "A person does this". The person lane uses Archify's normal variant, not its red "exception" style. Legend labels are reworded to "Automated step", "Reads stored data" and "Outside input or a person".
+39. **Nothing in the diagram can point back to the private project.** `render_diagram.py` refuses `meta.repository`, node `sources` and `brand`, and never passes `--repo-root`.
+40. **Only `diagram.html` reaches OUTPUT.** Archify's receipts (`*.finalize.json`, `*.delivery.json`, `*.browser-check.json`) stay in `WORK/diagram/`, which is cleared before each run because Archify will not overwrite earlier receipts. The update check is always off (`ARCHIFY_UPDATE_CHECK_DISABLED=1`).
+
+## Leak scan changes
+
+41. **File contract.** A new `contract` check fails the scan on any file in OUTPUT that is not in `[scan.contracts]` in `config.toml` (`demo` or `video`; `--contract none` turns it off). This is what keeps Archify receipts and working files out.
+42. **Working files are scanned too.** `--also` adds files that feed the demo but are not shipped (the Archify JSON, the video scene page). They get every leak check and are counted separately in the report.
+43. **Public text is not a secret.** `diagram.html` embeds Archify's code and a base64 font, which matched the `long_id` and `url` patterns 896 times. A pattern match is now ignored when it appears verbatim in this kit's own public files (`templates/` and Archify's `assets/`, `renderers/`, `locales/`). A planted private IP or client name in a diagram label is still caught, in both the HTML and the JSON (tested).
+44. Paths in reports use forward slashes on every system, so the contract and hidden-file checks work on Windows.
+45. `fill_report.py` can run again after a later scan: it replaces the existing results table, so the counts include the video once it is added.
+
+## Launch video (portfolio-video), version 1.1.0
+
+46. **A second skill in the same plugin**, offered at the end of the demo skill and usable later on any finished demo folder. One install covers both.
+47. **Claude builds the video itself**, as brag-slim does: one scene page whose `render(t)` is a pure function of time, captured frame by frame with Playwright's Chromium and encoded with FFmpeg. Hyperframes (used by full /brag) was not adopted, to avoid Node 22 and another CLI on every machine.
+48. **Built only from the safe demo.** `video_preflight.py` refuses a folder that is not a finished demo (only contract files, a passed scan in SANITISATION.md), copies it to the video WORK folder and takes screenshots from that copy. `render_video.py` serves only that folder on 127.0.0.1 and blocks every other request, then reports anything it blocked.
+49. **Scanned like the demo.** If the demo's WORK folder still exists, the full scan runs over the whole demo folder plus the scene page. If not, only the secret patterns can be checked, and the skill says which ran.
+50. **Original sound.** `make_audio.py` generates music and effects from sine waves and noise (standard library only), tuned to one key, with swells on scene cuts and ticks on clicks. brag's bundled music has no documented licence for redistribution, so none of it is used; its Kenney effects (CC0) were not needed.
+51. **Fixed output:** `<demo>/video/` with `launch.mp4` (poster baked in as frame 0), `launch.jpg`, `share-copy.txt` and `video-plan.md`. It ships with the demo and is in the demo contract. An existing video is only replaced with `--replace`, after asking the owner.
+52. **brag is guidance only.** Its licence is MIT; no brag code, text, music or sound files are copied. The video skill credits it.
+
+## Install and Windows
+
+53. Besides the plugin, both skills install with `npx skills add Jacing142/portfolio-demo-kit` (checked: it finds exactly two skills and copies them side by side, which the video skill relies on to reach the scanner).
+54. Plugin skills are invoked as `/portfolio-demo` and `/portfolio-video`, or `/portfolio-demo:portfolio-demo` and `/portfolio-demo:portfolio-video` if another command has the same name.
+55. Skills accept `python`, `py` or `python3`, since Windows usually has no `python3`. The README has PowerShell steps using `winget`. These steps were written but not run on Windows.
+
+## Example rebuilt (python-support-triage)
+
+56. Rebuilt with the installed plugin (fresh install into an empty home folder). Phases 1 to 5 reused the recorded owner decisions and the invented cases already in the example; phases 6 to 8 and the video ran in full: the diagram rendered first time, the first scan passed (10 files plus 3 working files, 0 findings, 0 of 10 canaries), and an OCR read of every half second of the video found none of the private terms.

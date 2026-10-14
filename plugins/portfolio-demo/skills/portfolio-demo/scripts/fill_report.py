@@ -3,11 +3,13 @@
   python3 scripts/fill_report.py --output OUTPUT --report WORK/scan/report.json
 
 Replaces the <!-- PDK:SCAN_RESULTS --> line with a table of counts only (never matched text).
+Run again after a later scan (for example once a launch video is added): it replaces the old table.
 Refuses unless the report says the scan was clean. Rescan afterwards: SANITISATION.md ships in the demo.
 """
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -25,9 +27,14 @@ def fill(output, report_path):
     if not doc.exists():
         sys.exit(f"{doc} is missing")
     text = doc.read_text(encoding="utf-8")
-    if MARKER not in text:
+    table = re.compile(r"\| Check \| Result \|\n(?:\|.*\|\n?)+")
+    if MARKER in text:
+        text = text.replace(MARKER, summary_counts(report))
+    elif table.search(text):
+        text = table.sub(lambda m: summary_counts(report) + "\n", text, count=1)
+    else:
         sys.exit(f"SANITISATION.md has no {MARKER} line for the scan results")
-    doc.write_text(text.replace(MARKER, summary_counts(report)), encoding="utf-8")
+    doc.write_text(text, encoding="utf-8")
     print("Scan results written into SANITISATION.md")
 
 

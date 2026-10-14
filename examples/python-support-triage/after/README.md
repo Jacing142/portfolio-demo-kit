@@ -6,6 +6,8 @@ A Python script that sorts each customer email by topic and urgency, looks up th
 
 ![How it works](diagram.svg)
 
+[Open the interactive diagram](diagram.html): trace the flow step by step, switch themes, or export it as an image.
+
 ## The problem
 
 A small online homeware shop answers every customer email by hand. Most are routine (where is my parcel, can I return this), but a few are urgent, and a safety problem buried in a polite email is easy to miss when the inbox is busy.
