@@ -42,6 +42,14 @@ patterns = [
 # Extra patterns of your own: name = "regular expression". Example: employee_id = "EMP-[0-9]{6}"
 [scan.extra_patterns]
 
+# The only files an output folder may hold. The scan fails on anything else (receipts, working files).
+[scan.contracts]
+demo = [
+  "index.html", "data.json", "diagram.svg", "diagram.html", "README.md", "SANITISATION.md",
+  "video/launch.mp4", "video/launch.jpg", "video/share-copy.txt", "video/video-plan.md",
+]
+video = ["launch.mp4", "launch.jpg", "share-copy.txt", "video-plan.md"]
+
 [pricing]
 # US dollars per million tokens, used only to estimate cost after running prompts.
 # Prices change: check https://www.anthropic.com/pricing and update these if needed.

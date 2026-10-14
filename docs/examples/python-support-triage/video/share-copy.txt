@@ -1,0 +1,1 @@
+A safety problem buried in a polite email is easy to miss. This triage script sorts each customer email by topic and urgency, looks up the order and drafts a reply, and a person checks every draft. Portfolio demo: every name, message and number in it is invented.

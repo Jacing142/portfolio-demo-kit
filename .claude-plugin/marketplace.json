@@ -9,14 +9,16 @@
     {
       "name": "portfolio-demo",
       "source": "./plugins/portfolio-demo",
-      "description": "Turns a private project into a safe public demo: finds what is sensitive, asks you what to keep, fake or remove, builds a demo page from invented data and scans it for leaks.",
+      "description": "Turns a private project into a safe public demo: finds what is sensitive, asks you what to keep, fake or remove, builds a demo page and interactive diagram from invented data, scans it for leaks, and can make a launch video of the result.",
       "category": "productivity",
       "keywords": [
         "portfolio",
         "demo",
         "privacy",
         "sanitise",
-        "case-study"
+        "case-study",
+        "diagram",
+        "video"
       ]
     }
   ]

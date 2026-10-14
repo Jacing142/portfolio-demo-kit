@@ -14,6 +14,8 @@ portfolio-demo-kit helps you make a public demo of private work. Please read thi
    Anthropic API. Nothing is sent to the authors of this tool.
 4. **Your project is never changed.** The skill works on a temporary copy and writes the demo to a
    separate folder. Delete that temporary copy when you are done; the skill reminds you.
-5. **Costs are yours.** Usage is billed to your own Claude plan or Anthropic account.
-6. **No warranty.** The software is provided under the MIT License, "as is", without warranty of
+5. **The launch video is built from the demo, not your project.** It uses only a copy of the
+   finished, scanned demo folder, and it is scanned again. Watch it before you post it.
+6. **Costs are yours.** Usage is billed to your own Claude plan or Anthropic account.
+7. **No warranty.** The software is provided under the MIT License, "as is", without warranty of
    any kind. It is not legal advice.

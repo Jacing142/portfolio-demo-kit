@@ -14,10 +14,13 @@ from pathlib import Path
 
 from . import canaries, checks, scan
 from .config import load
-from .extract import output_texts
+from .extract import normalize, output_texts
 
 # The skill folder: scripts/scanner/__main__.py -> scripts -> skill
 ROOT = Path(__file__).resolve().parent.parent.parent
+# Text that ships with this kit and is public anyway: the templates, and the Archify renderer
+# whose code and font are copied into every diagram.html.
+PUBLIC_DIRS = ["templates", "vendor/archify/assets", "vendor/archify/renderers", "vendor/archify/locales"]
 
 
 def main(argv=None):
@@ -37,6 +40,10 @@ def main(argv=None):
     s.add_argument("--allow", help="decisions.json (keep_strings) or a JSON list of kept strings")
     s.add_argument("--public", action="append", default=None,
                    help="folder of already-public text to ignore (default: the skill's templates/)")
+    s.add_argument("--also", action="append", default=[],
+                   help="a working file or folder that feeds the demo but is not shipped (Archify JSON, video scenes)")
+    s.add_argument("--contract", default="demo",
+                   help="which file list the output folder must match: demo (default), video or none")
     s.add_argument("--paraphrase", action="store_true", help="run the optional API rewording check")
     s.add_argument("--report", help="write the full JSON report here (keep it private)")
     s.add_argument("--markdown", help="write the masked markdown report here")
@@ -66,7 +73,9 @@ def main(argv=None):
             outputs = [(path.name, path.read_text(encoding="utf-8"), "")]
         else:
             outputs = output_texts(path)
-        hits = checks.secret_patterns(outputs, cfg)
+        public = scan.Allowlist((), scan.load_public([str(ROOT / d) for d in PUBLIC_DIRS]), cfg["ngram_words"])
+        hits = [h for h in checks.secret_patterns(outputs, cfg)
+                if not (public.public and normalize(h["text"]) in public.public)]
         for h in hits:
             print(f"{h['check']} in {h['file']}: {scan.mask(h['text'])}")
         return 1 if hits else 0
@@ -74,9 +83,15 @@ def main(argv=None):
     if not Path(args.output).is_dir() or not any(Path(args.output).iterdir()):
         print(f"Output folder is missing or empty: {args.output}", file=sys.stderr)
         return 2
-    public = args.public if args.public is not None else [str(ROOT / "templates")]
+    public = args.public if args.public is not None else [str(ROOT / d) for d in PUBLIC_DIRS]
+    contracts = cfg.get("contracts", {})
+    if args.contract != "none" and args.contract not in contracts:
+        print(f"Unknown contract {args.contract!r}; use one of: {', '.join(contracts)} or none", file=sys.stderr)
+        return 2
     report = scan.run(args.source, args.output, cfg, args.canaries, args.allow, public,
-                      paraphrase_on=args.paraphrase and cfg.get("paraphrase_check", False))
+                      paraphrase_on=args.paraphrase and cfg.get("paraphrase_check", False),
+                      extra_paths=args.also,
+                      contract=None if args.contract == "none" else contracts[args.contract])
     md = scan.to_markdown(report)
     if args.report:
         Path(args.report).parent.mkdir(parents=True, exist_ok=True)

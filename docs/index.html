@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; media-src 'self';">
 <meta name="description" content="Turn private client work into a safe public portfolio demo. You decide what stays, what gets faked and what goes.">
 <title>portfolio-demo-kit: show work you can't share</title>
 <style>
@@ -76,6 +76,7 @@
     <span class="brand">portfolio-demo-kit</span>
     <nav aria-label="Sections">
       <a href="#examples">Examples</a>
+      <a href="#video">Video</a>
       <a href="#try">Try it</a>
       <a href="#safety">Safety</a>
     </nav>
@@ -85,7 +86,7 @@
 <main class="wrap">
   <section class="hero">
     <h1>Your best work is under NDA, so you can't show it.</h1>
-    <p class="lead">portfolio-demo-kit turns a private project into a safe public demo you can put in your portfolio: a page people can click through, a diagram of how it works, and a short case study. You decide what stays, what gets replaced with invented data, and what is left out.</p>
+    <p class="lead">portfolio-demo-kit turns a private project into a safe public demo you can put in your portfolio: a page people can click through, an interactive diagram of how it works, a short case study, and a 20-second launch video to post. You decide what stays, what gets replaced with invented data, and what is left out.</p>
     <div class="cta">
       <a class="btn primary" href="#examples">See real examples</a>
       <a class="btn secondary" href="#try">Try it yourself</a>
@@ -151,9 +152,10 @@
         <div class="body">
           <span class="tag invented">Invented project</span>
           <h3>Support email triage</h3>
-          <p>Sorts customer emails by topic and urgency, looks up the order and drafts a reply for a person to check. Includes a safety case and an email in French.</p>
+          <p>Sorts customer emails by topic and urgency, looks up the order and drafts a reply for a person to check. Includes a safety case, an email in French, an interactive diagram and a launch video.</p>
           <div class="links">
             <a href="examples/python-support-triage/index.html">Open the demo</a>
+            <a href="#video">Watch the video</a>
             <a href="examples/python-support-triage/SANITISATION.md">How it was made safe</a>
           </div>
         </div>
@@ -161,18 +163,26 @@
     </div>
   </section>
 
+  <section id="video" aria-labelledby="vid">
+    <h2 id="vid">A launch video, made from the safe demo</h2>
+    <p class="muted">After the demo passes its leak scan, the kit can make a 20-second video of it, with an original soundtrack and a ready-to-post caption. It is built only from the public demo, never from the private project, and scanned again before you get it.</p>
+    <div class="figure">
+      <video controls preload="none" playsinline width="1920" height="1080" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--line)"
+        poster="examples/python-support-triage/video/launch.jpg" src="examples/python-support-triage/video/launch.mp4"></video>
+    </div>
+  </section>
+
   <section id="try" aria-labelledby="tryh">
     <h2 id="tryh">Try it (for technical readers)</h2>
     <div class="try">
-      <p>It is a skill for <strong>Claude Code</strong>. Install it from inside Claude Code:</p>
+      <p>It is a pair of skills for <strong>Claude Code</strong>. Install them from inside Claude Code:</p>
       <pre><code>/plugin marketplace add Jacing142/portfolio-demo-kit
 /plugin install portfolio-demo@portfolio-demo-kit</code></pre>
-      <p>Or copy the skill folder by hand:</p>
-      <pre><code>git clone https://github.com/Jacing142/portfolio-demo-kit
-cp -r portfolio-demo-kit/plugins/portfolio-demo/skills/portfolio-demo ~/.claude/skills/</code></pre>
-      <p>Then, in Claude Code, from the cloned folder, ask:</p>
-      <pre><code>Run the portfolio-demo skill on examples/apps-script-feedback/before</code></pre>
-      <p class="muted">No API key is needed: without one, example outputs are written by Claude and labelled "Illustrative". If <code>ANTHROPIC_API_KEY</code> is set, the project's own prompts are run for real and labelled with the model that answered. Python 3.11 or newer is the only other requirement.</p>
+      <p>Or, for any agent that supports skills, from a terminal:</p>
+      <pre><code>npx skills add Jacing142/portfolio-demo-kit</code></pre>
+      <p>Then, inside your project, ask:</p>
+      <pre><code>/portfolio-demo</code></pre>
+      <p class="muted">Python 3.11+ is required. Node.js 18+ adds the interactive diagram. The video needs FFmpeg and Playwright; Claude asks before installing them. Full steps, including Windows, are in the README on GitHub.</p>
     </div>
   </section>
 

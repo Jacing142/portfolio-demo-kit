@@ -186,5 +186,5 @@ def output_texts(root):
             continue
         variants = [raw, html.unescape(raw), _json_strings(raw), _json_strings(html.unescape(raw))]
         joined = "\n".join(variants)
-        out.append((str(path.relative_to(root)), joined, normalize(joined)))
+        out.append((path.relative_to(root).as_posix(), joined, normalize(joined)))
     return out

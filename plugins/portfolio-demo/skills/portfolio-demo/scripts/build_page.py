@@ -4,7 +4,8 @@
       --results WORK/demo/results.json --out OUTPUT
 
 Writes output/index.html (with the data inline) and output/data.json from the same object,
-and copies the diagram to output/diagram.svg. The leak scanner checks the two data copies match.
+and copies the diagram to output/diagram.svg. If output/diagram.html exists (written by
+render_diagram.py), the page embeds it on screens 600px and wider and keeps diagram.svg for phones. The leak scanner checks the two data copies match.
 The skill folder is found relative to this file, so it runs from any working directory.
 
 Provenance is decided here, not by whoever wrote the spec:
@@ -94,7 +95,12 @@ def build_data(spec, plan, results):
     }, skipped
 
 
-def render(data, svg):
+LIVE = ('<div class="diagram-live"><iframe src="diagram.html" title="Interactive diagram" loading="lazy" '
+        'sandbox="allow-scripts allow-downloads"></iframe>'
+        '<p><a href="diagram.html">Open the interactive diagram full screen</a></p></div>')
+
+
+def render(data, svg, live=False):
     page = TEMPLATE.read_text(encoding="utf-8")
     inline = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     what = "\n    ".join(f"<p>{html.escape(p)}</p>" for p in data["what_it_does"])
@@ -105,6 +111,8 @@ def render(data, svg):
         "{{WHAT_IT_DOES}}": what,
         "{{BUILT_WITH}}": built,
         "{{DIAGRAM_SVG}}": svg,
+        "{{DIAGRAM_CLASS}}": " has-live" if live else "",
+        "{{DIAGRAM_LIVE}}": LIVE if live else "",
         "{{DIAGRAM_CAPTION}}": html.escape(data["diagram_caption"]),
         "{{DATA_JSON}}": inline,
     }.items():
@@ -134,11 +142,13 @@ def main(argv=None):
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "index.html").write_text(render(data, svg), encoding="utf-8")
+    live = (out / "diagram.html").exists()
+    (out / "index.html").write_text(render(data, svg, live), encoding="utf-8")
     (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (out / "diagram.svg").write_text(svg + "\n", encoding="utf-8")
     kinds = [c["provenance"]["kind"] for c in data["cases"]]
-    print(f"Built {out / 'index.html'}: {kinds.count('generated')} generated, {kinds.count('illustrative')} illustrative")
+    print(f"Built {out / 'index.html'}: {kinds.count('generated')} generated, {kinds.count('illustrative')} illustrative, "
+          + ("interactive diagram embedded" if live else "diagram.svg only"))
     if skipped:
         print(f"Skipped (no output, e.g. the model declined): {', '.join(skipped)}")
 

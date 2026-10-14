@@ -2,7 +2,7 @@
 name: portfolio-demo
 description: Turn a private project (any stack) into a safe public portfolio demo - a static demo page with a flow diagram, a case-study README and a sanitisation report. Finds everything sensitive, asks the owner what to keep, fake or remove, invents data from the real structure, and scans the result for leaks. Use when someone wants to show client or NDA work publicly, make a portfolio piece or case study from a private repo, or sanitise a project for sharing.
 argument-hint: "[path to the private project]"
-allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/*)
+allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/*), Bash(python ${CLAUDE_SKILL_DIR}/scripts/*), Bash(py ${CLAUDE_SKILL_DIR}/scripts/*)
 ---
 
 # Portfolio demo
@@ -13,9 +13,12 @@ sensitive. The owner decides what is kept, faked or removed. You never publish a
 The project to work on: `$ARGUMENTS` (if empty, ask which folder, or use the current project).
 
 Everything you need is in this skill folder, `${CLAUDE_SKILL_DIR}`:
-`scripts/` (preflight, leak scanner, prompt runner, page builder, report filler) and `templates/`
-(demo page, diagram style guide, case-study README, SANITISATION.md). Scripts need Python 3.11+
-and nothing else.
+`scripts/` (preflight, leak scanner, prompt runner, diagram renderer, page builder, report filler),
+`templates/` (demo page, diagram guides, case-study README, SANITISATION.md) and `vendor/archify/`
+(the interactive diagram renderer, MIT). Scripts need Python 3.11+. The interactive diagram also
+needs Node.js 18+; without it the demo uses the static diagram only.
+
+On Windows, use `python` or `py` wherever this file says `python3`.
 
 ## Ground rules
 
@@ -195,11 +198,23 @@ matching the original, and the scanner will flag it.
 
 ## Phase 6: Build the page and diagram
 
-1. **Diagram**: write `WORK/demo/diagram.svg` by hand, following
-   `${CLAUDE_SKILL_DIR}/templates/diagram/STYLE.md` (copy its skeleton). Show only steps the code
-   performs plus steps the owner confirmed in phase 2 (`confirmed_steps`). Nothing else.
-   Word each step freshly: if a confirmed step repeats text from the project itself (a README note,
-   a line in a prompt), reword it, or the scanner will flag it.
+1. **Diagrams**: the same steps, drawn twice. Show only steps the code performs plus steps the owner
+   confirmed in phase 2 (`confirmed_steps`). Nothing else. Word each step freshly: if a confirmed
+   step repeats text from the project itself (a README note, a line in a prompt), reword it, or the
+   scanner will flag it.
+   - **Static (phones):** write `WORK/demo/diagram.svg` by hand, following
+     `${CLAUDE_SKILL_DIR}/templates/diagram/STYLE.md` (copy its skeleton).
+   - **Interactive (wider screens):** write `WORK/demo/diagram.archify.json` and render it into
+     OUTPUT, following `${CLAUDE_SKILL_DIR}/templates/diagram/ARCHIFY.md`:
+
+     ```bash
+     python3 ${CLAUDE_SKILL_DIR}/scripts/render_diagram.py --json $WORK/demo/diagram.archify.json \
+       --work $WORK/diagram --out <OUTPUT>
+     ```
+
+     Exit 1: fix the JSON from Archify's messages and rerun (up to 3 times). Exit 3 (no Node.js),
+     or still failing after 3 tries: carry on with `diagram.svg` only and tell the owner why.
+     Render it before building the page: the page embeds `diagram.html` only if it exists.
 2. **Page content**: write `WORK/demo/spec.json`:
 
 ```json
@@ -243,22 +258,26 @@ matching the original, and the scanner will flag it.
    Describe what was found without repeating it. Record the owner's decisions. Keep the
    `<!-- PDK:SCAN_RESULTS -->` line exactly as it is.
 
-OUTPUT must contain only these five files: `index.html`, `data.json`, `diagram.svg`, `README.md`,
-`SANITISATION.md`.
+OUTPUT must contain only these files: `index.html`, `data.json`, `diagram.svg`, `diagram.html`
+(when Node.js is installed), `README.md`, `SANITISATION.md`, and later the optional `video/` folder
+(`launch.mp4`, `launch.jpg`, `share-copy.txt`, `video-plan.md`). The scan fails on anything else,
+such as Archify's receipt files.
 
 ## Phase 7: Scan, fix, rescan
 
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/scripts/leak_scan.py scan --source $WORK/copy --output <OUTPUT> \
   --canaries $WORK/private/canaries.json --allow $WORK/decisions.json \
+  --also $WORK/demo/diagram.archify.json \
   --report $WORK/scan/report.json --markdown $WORK/scan/report.md
 ```
 
-Add `--paraphrase` when `ANTHROPIC_API_KEY` is set: it asks the model whether PROPRIETARY text was
+Leave out `--also` if there is no interactive diagram. Add `--paraphrase` when `ANTHROPIC_API_KEY` is set: it asks the model whether PROPRIETARY text was
 reworded into the demo, as warnings for the owner to review.
 
 It checks exact strings (code literals, spreadsheet cells, lines of text), runs of 6 or more words,
-secret patterns, all 10 canaries, that the page data matches data.json, and a self-test (one real
+secret patterns, all 10 canaries, that the page data matches data.json, that OUTPUT holds only the
+files listed above, and a self-test (one real
 string planted in a temporary copy of the demo must be caught, or the whole scan fails).
 Exit code 0 means clean.
 
@@ -271,8 +290,9 @@ finding, find where the text came from (`where`) and decide which kind it is:
   the owner, or reword it.
 - **A generic word or phrase** that happens to match (for example "processing"): reword it.
 
-To change a source, edit `WORK/demo/spec.json`, `WORK/demo/diagram.svg`, `OUTPUT/README.md`
-or `OUTPUT/SANITISATION.md`. Replace it with invented text, reword it fully in your own words, or
+To change a source, edit `WORK/demo/spec.json`, `WORK/demo/diagram.svg`,
+`WORK/demo/diagram.archify.json` (then rerun `render_diagram.py`), `OUTPUT/README.md` or
+`OUTPUT/SANITISATION.md`. Replace it with invented text, reword it fully in your own words, or
 drop it. Rebuild the page, then rescan. Never edit `decisions.json`, the scanner, `config.toml` or
 the canaries to make a scan pass.
 
@@ -291,7 +311,8 @@ using the masked report in `WORK/scan/report.md`, and do not present the demo as
    then repeat the phase 7 command. It must still pass.
 2. Tell the owner, in plain words:
    - what is in OUTPUT: `index.html` (the demo page, open it in a browser), `data.json`,
-     `diagram.svg`, `README.md` (the case study) and `SANITISATION.md` (what was found, decided and checked);
+     `diagram.svg` and `diagram.html` (the static and interactive diagrams), `README.md` (the case
+     study) and `SANITISATION.md` (what was found, decided and checked);
    - the scan result, and any rewording warnings for them to review;
    - which outputs are real runs and which are illustrative;
    - **read every word before publishing**: the checks reduce risk, they do not guarantee it.
@@ -300,4 +321,7 @@ using the masked report in `WORK/scan/report.md`, and do not present the demo as
       private project, and never push OUTPUT from inside the project's repository.
    2. Then either **GitHub Pages** (Settings > Pages > Deploy from a branch > `main`, `/ (root)`) or
       **Vercel** (Add New > Project, import the repository, framework "Other", no build command).
-4. Delete WORK when the owner is done: it holds a copy of the private project.
+4. **Offer a launch video**, in one line: a 20-second video of this demo for LinkedIn or a
+   portfolio, made only from OUTPUT. If they say yes, follow the `portfolio-video` skill
+   (`${CLAUDE_SKILL_DIR}/../portfolio-video/SKILL.md`) before deleting WORK, so its full scan can run.
+5. Delete WORK when the owner is done: it holds a copy of the private project.

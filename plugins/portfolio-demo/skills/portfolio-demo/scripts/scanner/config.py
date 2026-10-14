@@ -16,6 +16,11 @@ DEFAULTS = {
         "url", "private_ip", "long_id",
     ],
     "extra_patterns": {},
+    "contracts": {
+        "demo": ["index.html", "data.json", "diagram.svg", "diagram.html", "README.md", "SANITISATION.md",
+                 "video/launch.mp4", "video/launch.jpg", "video/share-copy.txt", "video/video-plan.md"],
+        "video": ["launch.mp4", "launch.jpg", "share-copy.txt", "video-plan.md"],
+    },
 }
 
 

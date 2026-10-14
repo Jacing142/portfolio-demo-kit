@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; frame-src 'self';">
 <title>Support email triage</title>
 <style>
   :root {
@@ -33,6 +33,14 @@
   .built { font-size: .9rem; color: var(--muted); }
   figure { margin: 0; }
   .diagram svg { width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto; }
+  .diagram-live { display: none; }
+  .diagram-live { width: min(1120px, calc(100vw - 32px)); position: relative; left: 50%; transform: translateX(-50%); }
+  .diagram-live iframe { display: block; width: 100%; height: min(680px, 80vh); border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+  .diagram-live p { margin: 8px 0 0; font-size: .9rem; text-align: center; }
+  @media (min-width: 600px) {
+    .has-live .diagram-live { display: block; }
+    .has-live .diagram-static { display: none; }
+  }
   figcaption { font-size: .9rem; color: var(--muted); margin-top: 8px; }
   label { display: block; font-weight: 600; margin-bottom: 6px; }
   select {
@@ -81,8 +89,8 @@
 
   <section aria-labelledby="how">
     <h2 id="how">How it works</h2>
-    <figure class="diagram">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 564" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+    <figure class="diagram has-live">
+      <div class="diagram-static"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 564" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
   <title id="t">How support email triage works</title>
   <desc id="d">A new customer email is sorted by topic and urgency, the order is looked up, Claude drafts a reply following the shop&#x27;s policy, urgent or high-value emails are flagged for a manager, and a person on the support team reviews each draft before it goes out.</desc>
   <defs>
@@ -127,7 +135,8 @@
   <text x="56" y="546" font-size="12.5" fill="#1b2533">Automated</text>
   <rect x="150" y="534" width="18" height="14" rx="3" fill="#fdf0e4" stroke="#b35400" stroke-width="2" stroke-dasharray="4 3"/>
   <text x="174" y="546" font-size="12.5" fill="#1b2533">A person does this</text>
-</svg>
+</svg></div>
+      <div class="diagram-live"><iframe src="diagram.html" title="Interactive diagram" loading="lazy" sandbox="allow-scripts allow-downloads"></iframe><p><a href="diagram.html">Open the interactive diagram full screen</a></p></div>
       <figcaption>Blue steps are automated. The dashed orange step is done by a person.</figcaption>
     </figure>
   </section>

@@ -49,11 +49,12 @@ exact strings, runs of 6 or more words, secret patterns (keys, emails, private l
 ten planted "canary" strings that must never appear. As a self-test, it also planted one real
 string in a copy of the demo and confirmed it was caught.
 
-The first scan found 12 problems, including a phrase copied from the shop's private reply prompt and a fixed message from the script that the owner had kept but which had not been listed as kept. They were fixed in one round. The table below is the final scan.
+The first scan found 12 problems, including a phrase copied from the shop's private reply prompt and a fixed message from the script that the owner had kept but which had not been listed as kept. They were fixed in one round. The demo was later rebuilt with an interactive diagram (diagram.html); the scanner also checked that diagram and the file it was drawn from, and that scan passed first time. The table below is the final scan.
 
 | Check | Result |
 |---|---|
-| Files in this demo scanned | 5 |
+| Files in this demo scanned | 10 |
+| Working files the demo was drawn from, also scanned | 3 |
 | Strings from the private project checked against the demo | 136 |
 | Exact copies found | 0 |
 | Copied runs of words found | 0 |
